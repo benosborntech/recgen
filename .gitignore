@@ -1,6 +1,9 @@
 # Misc
 .env
 
+# Kubernetes
+**/.kube/config
+
 # Terraform
 **/.terraform/*
 *.tfstate
