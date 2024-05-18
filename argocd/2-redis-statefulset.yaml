@@ -4,7 +4,7 @@ metadata:
   name: redis
 spec:
   serviceName: redis
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: redis
@@ -16,14 +16,11 @@ spec:
       containers:
       - name: redis
         image: redis:latest
-        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 6379
-          name: redis
-	  volumes:
-      - name: redis-data
-      	persistentVOlumeClaim:
-        claimName: redis-pvc
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
   volumeClaimTemplates:
   - metadata:
       name: redis-pvc
