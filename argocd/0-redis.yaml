@@ -17,37 +17,37 @@ spec:
   ports:
     - port: 6379
 # ---
-# apiVersion: apps/v1
-# kind: StatefulSet
-# metadata:
-#   name: redis
-# spec:
-#   serviceName: redis-service
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: redis
-#   template:
-#     metadata:
-#       labels:
-#         app: redis
-#     spec:
-#       containers:
-#       - name: redis
-#         image: redis:latest
-#         ports:
-#         - containerPort: 6379
-#         volumeMounts:
-#         - name: redis-data
-#           mountPath: /data
-#         command: ["redis-server"]
-#         args: ["--appendonly", "yes"]
-#   volumeClaimTemplates:
-#   - metadata:
-#       name: redis-data
-#     spec:
-#       accessModes: [ "ReadWriteOnce" ]
-#       storageClassName: redis-storage-class
-#       resources:
-#         requests:
-#           storage: 1Gi
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+spec:
+  serviceName: redis-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:latest
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: redis-data
+          mountPath: /var/lib/data
+        command: ["redis-server"]
+        args: ["--appendonly", "yes"]
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: redis-storage-class
+      resources:
+        requests:
+          storage: 1Gi
