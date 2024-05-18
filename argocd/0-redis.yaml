@@ -6,48 +6,48 @@ provisioner: kubernetes.io/gce-pd
 parameters:
   type: pd-standard
 reclaimPolicy: Retain
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: redis-service
-spec:
-  selector:
-    app: redis
-  ports:
-    - port: 6379
----
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: redis
-spec:
-  serviceName: redis-service
-  replicas: 1
-  selector:
-    matchLabels:
-      app: redis
-  template:
-    metadata:
-      labels:
-        app: redis
-    spec:
-      containers:
-      - name: redis
-        image: redis:latest
-        ports:
-        - containerPort: 6379
-        volumeMounts:
-        - name: redis-data
-          mountPath: /data
-        command: ["redis-server"]
-        args: ["--appendonly", "yes"]
-  volumeClaimTemplates:
-  - metadata:
-      name: redis-data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: redis-storage-class
-      resources:
-        requests:
-          storage: 1Gi
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: redis-service
+# spec:
+#   selector:
+#     app: redis
+#   ports:
+#     - port: 6379
+# ---
+# apiVersion: apps/v1
+# kind: StatefulSet
+# metadata:
+#   name: redis
+# spec:
+#   serviceName: redis-service
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: redis
+#   template:
+#     metadata:
+#       labels:
+#         app: redis
+#     spec:
+#       containers:
+#       - name: redis
+#         image: redis:latest
+#         ports:
+#         - containerPort: 6379
+#         volumeMounts:
+#         - name: redis-data
+#           mountPath: /data
+#         command: ["redis-server"]
+#         args: ["--appendonly", "yes"]
+#   volumeClaimTemplates:
+#   - metadata:
+#       name: redis-data
+#     spec:
+#       accessModes: [ "ReadWriteOnce" ]
+#       storageClassName: redis-storage-class
+#       resources:
+#         requests:
+#           storage: 1Gi
