@@ -1,9 +1,28 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: redis-storage-class
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-standard
+reclaimPolicy: Retain
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    app: redis
+  ports:
+    - port: 6379
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: redis
 spec:
-  serviceName: redis
+  serviceName: redis-service
   replicas: 1
   selector:
     matchLabels:
@@ -28,7 +47,7 @@ spec:
       name: redis-data
     spec:
       accessModes: [ "ReadWriteOnce" ]
-      storageClassName: redis-data
+      storageClassName: redis-storage-class
       resources:
         requests:
           storage: 1Gi
