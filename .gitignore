@@ -1,0 +1,7 @@
+# Misc
+.env
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
