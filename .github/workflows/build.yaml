@@ -37,4 +37,4 @@ jobs:
           context: ${{ github.workspace }}/src/submitevent
           file: ${{ github.workspace }}/src/submitevent/Dockerfile
           push: true
-          tags: registry.digitalocean.com/recgensubmiteventcr/submitevent:latest
+          tags: registry.digitalocean.com/recgencr/submitevent:latest
