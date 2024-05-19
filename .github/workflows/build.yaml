@@ -33,3 +33,5 @@ jobs:
           file: ${{ github.workspace }}/src/submitevent/Dockerfile
           push: true
           tags: registry.digitalocean.com/recgencr/submitevent:latest
+
+# **** Have a separate command down here to push the changes to prod with the new manifests (i.e. merge this prod to prod-deployment) so it can be picked up my the argo app (change its branch)
