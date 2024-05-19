@@ -24,10 +24,20 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_TOKEN }}
 
+      # - name: Build and push
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ${{ github.workspace }}/src/submitevent
+      #     file: ${{ github.workspace }}/src/submitevent/Dockerfile
+      #     push: true
+      #     tags: registry.digitalocean.com/recgensubmiteventcr:latest
+
       - name: Build and push
-        uses: docker/build-push-action@v2
-        with:
-          context: ${{ github.workspace }}/src/submitevent
-          file: ${{ github.workspace }}/src/submitevent/Dockerfile
-          push: true
-          tags: registry.digitalocean.com/recgensubmiteventcr:latest
+        run: |
+          echo ${{ github.workspace }}
+          echo $GITHUB_WORKSPACE
+
+          ls ${{ github.workspace }}
+          ls $GITHUB_WORKSPACE
+
+# https://github.com/actions/checkout/issues/785
