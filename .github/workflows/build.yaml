@@ -33,6 +33,7 @@ jobs:
       #     tags: registry.digitalocean.com/recgensubmiteventcr:latest
 
       - name: Build and push
+        uses: actions/checkout@v4
         run: |
           cd ${{ github.workspace }}
           ls .
