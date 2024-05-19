@@ -21,7 +21,7 @@ jobs:
 
       - name: Login to DigitalOcean Container Registry
         run: |
-          docker login registry.digitalocean.com -u ${{ secrets.DIGITALOCEAN_USERNAME }} -p ${{ secrets.DIGITALOCEAN_PASSWORD }}
+          docker login registry.digitalocean.com -u ${{ secrets.DIGITALOCEAN_USERNAME }} -p ${{ secrets.DIGITALOCEAN_TOKEN }}
 
       - name: Retrieve repo
         uses: actions/checkout@v4
