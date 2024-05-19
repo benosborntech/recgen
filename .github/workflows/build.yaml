@@ -23,11 +23,6 @@ jobs:
         run: |
           docker login -u ${{ secrets.DIGITALOCEAN_USERNAME }} -p ${{ secrets.DIGITALOCEAN_TOKEN }} registry.digitalocean.com
 
-      # - name: Upload Docker credentials
-      #   run: |
-      #     mkdir -p ~/.docker
-      #     echo ${{ secrets.DOCKER_CREDS }} > ~/.docker/config.json
-
       - name: Retrieve repo
         uses: actions/checkout@v4
 
