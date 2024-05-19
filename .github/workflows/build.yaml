@@ -19,9 +19,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Login to DigitalOcean Container Registry
+      # - name: Login to DigitalOcean Container Registry
+      #   run: |
+      #     docker login registry.digitalocean.com -u ${{ secrets.DIGITALOCEAN_USERNAME }} -p ${{ secrets.DIGITALOCEAN_TOKEN }}
+
+      - name: Upload Docker credentials
         run: |
-          docker login registry.digitalocean.com -u ${{ secrets.DIGITALOCEAN_USERNAME }} -p ${{ secrets.DIGITALOCEAN_TOKEN }}
+          mkdir -p ~/.docker
+          echo ${{ secrets.DOCKER_CREDS }} > ~/.docker/config.json
 
       - name: Retrieve repo
         uses: actions/checkout@v4
