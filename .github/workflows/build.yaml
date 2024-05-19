@@ -34,10 +34,7 @@ jobs:
 
       - name: Build and push
         run: |
-          echo ${{ github.workspace }}
-          echo $GITHUB_WORKSPACE
-          echo $GITHUB_ACTION_PATH
-
-          ls $GITHUB_ACTION_PATH
+          cd ${{ github.workspace }}
+          ls .
 
 # https://github.com/actions/checkout/issues/785
