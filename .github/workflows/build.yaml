@@ -27,7 +27,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: ${{ github.workspace }}/src/submitevent
-          file: ${{ github.workspace }}/src/submitevent/Dockerfile
+          context: ./src/submitevent
           push: true
           tags: registry.digitalocean.com/recgensubmiteventcr:latest
