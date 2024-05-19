@@ -22,9 +22,7 @@ jobs:
       - name: Login to DigitalOcean Container Registry
         uses: digitalocean/action-doctl@v2
         with:
-          cmd: registry login --username ${{ secrets.DIGITALOCEAN_USERNAME }} --password-stdin
-        env:
-          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
 
       - name: Build and push
         uses: docker/build-push-action@v4
