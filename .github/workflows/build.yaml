@@ -40,4 +40,6 @@ jobs:
           ls ${{ github.workspace }}
           ls $GITHUB_WORKSPACE
 
+          ls /
+
 # https://github.com/actions/checkout/issues/785
