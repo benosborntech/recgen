@@ -32,8 +32,10 @@ jobs:
       #     push: true
       #     tags: registry.digitalocean.com/recgensubmiteventcr:latest
 
-      - name: Build and push
+      - name: Retrieve repo
         uses: actions/checkout@v4
+
+      - name: Build and push
         run: |
           cd ${{ github.workspace }}
           ls .
