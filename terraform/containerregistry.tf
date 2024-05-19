@@ -1,4 +1,4 @@
-resource "digitalocean_container_registry" "submitevent_container_registry" {
-  name                   = var.submitevent_container_registry_name
-  subscription_tier_slug = "starter"
+resource "digitalocean_container_registry" "container_registry" {
+  name                   = var.container_registry_name
+  subscription_tier_slug = "basic"
 }

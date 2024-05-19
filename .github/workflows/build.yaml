@@ -19,14 +19,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      # - name: Login to DigitalOcean Container Registry
-      #   run: |
-      #     docker login registry.digitalocean.com -u ${{ secrets.DIGITALOCEAN_USERNAME }} -p ${{ secrets.DIGITALOCEAN_TOKEN }}
-
-      - name: Upload Docker credentials
+      - name: Login to DigitalOcean Container Registry
         run: |
-          mkdir -p ~/.docker
-          echo ${{ secrets.DOCKER_CREDS }} > ~/.docker/config.json
+          docker login -u ${{ secrets.DIGITALOCEAN_USERNAME }} -p ${{ secrets.DIGITALOCEAN_TOKEN }} registry.digitalocean.com
+
+      # - name: Upload Docker credentials
+      #   run: |
+      #     mkdir -p ~/.docker
+      #     echo ${{ secrets.DOCKER_CREDS }} > ~/.docker/config.json
 
       - name: Retrieve repo
         uses: actions/checkout@v4
@@ -37,4 +37,4 @@ jobs:
           context: ${{ github.workspace }}/src/submitevent
           file: ${{ github.workspace }}/src/submitevent/Dockerfile
           push: true
-          tags: registry.digitalocean.com/recgensubmiteventcr:latest
+          tags: registry.digitalocean.com/recgensubmiteventcr/submitevent:latest

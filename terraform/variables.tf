@@ -35,7 +35,7 @@ variable "cluster_node_size" {
 }
 
 # Container registry
-variable "submitevent_container_registry_name" {
+variable "container_registry_name" {
   type    = string
-  default = "recgensubmiteventcr"
+  default = "recgencr"
 }
