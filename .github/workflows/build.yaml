@@ -36,10 +36,8 @@ jobs:
         run: |
           echo ${{ github.workspace }}
           echo $GITHUB_WORKSPACE
+          echo $GITHUB_ACTION_PATH
 
-          ls ${{ github.workspace }}
-          ls $GITHUB_WORKSPACE
-
-          ls /
+          ls $GITHUB_ACTION_PATH
 
 # https://github.com/actions/checkout/issues/785
