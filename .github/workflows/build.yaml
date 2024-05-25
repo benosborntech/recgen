@@ -34,8 +34,6 @@ jobs:
       #     push: true
       #     tags: registry.digitalocean.com/recgencr/submitevent:latest
 
-      # git config pull.rebase false
-
       - name: Configure git for GitHub Actions
         run: |
           git config --global user.name 'github-actions[bot]'
@@ -44,11 +42,11 @@ jobs:
       - name: Checkout deployment branch
         run: |
           git checkout prod
-          git pull origin
+          git pull origin prod
 
       - name: Merge changes
         run: |
-          git checkout -b prod-deployment origin/prod-deployment || git checkout prod-deployment
+          git checkout prod-deployment
           git merge prod -m "Merge to deployment"
 
       - name: Push changes to deployment branch
