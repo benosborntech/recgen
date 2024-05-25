@@ -34,11 +34,11 @@ jobs:
       #     push: true
       #     tags: registry.digitalocean.com/recgencr/submitevent:latest
 
-      # - name: Configure git for GitHub Actions
-      #   run: |
-      #     git config --global user.name 'github-actions[bot]'
-      #     git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-      #     git config pull.rebase false
+      - name: Configure git for GitHub Actions
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git config pull.rebase false
 
       - name: Checkout deployment branch
         run: |
