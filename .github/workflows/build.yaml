@@ -42,13 +42,12 @@ jobs:
 
       - name: Checkout deployment branch
         run: |
-          git fetch origin
-          git checkout prod-deployment origin/prod-deployment || git checkout -b prod-deployment
-          git pull origin prod-deployment
+          git pull origin
+          git checkout prod-deployment
 
       - name: Merge changes
         run: |
-          git merge --no-ff prod -m "Merge to deployment"
+          git merge prod -m "Merge to deployment"
 
       - name: Push changes to deployment branch
         env:
