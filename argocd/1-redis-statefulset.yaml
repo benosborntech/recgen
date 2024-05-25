@@ -19,13 +19,14 @@ spec:
         ports:
         - containerPort: 6379
         volumeMounts:
-        - name: redis-pvc
+        - name: redis-data
           mountPath: /data
   volumeClaimTemplates:
   - metadata:
-      name: redis-pvc
+      name: redis-data
     spec:
-      accessModes: [ "ReadWriteOnce" ]
+      accessModes:
+        - ReadWriteOnce
       resources:
         requests:
           storage: 1Gi
