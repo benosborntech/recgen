@@ -10,7 +10,7 @@ on:
       - prod
 
 jobs:
-  docker:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -43,10 +43,11 @@ jobs:
         run: |
           git fetch origin
           git checkout prod-deployment origin/prod-deployment || git checkout -b prod-deployment
+          git pull origin prod-deployment
 
       - name: Merge changes
         run: |
-          git merge prod -m "Merge to deployment"
+          git merge --no-ff prod -m "Merge to deployment"
 
       - name: Push changes to deployment branch
         env:
