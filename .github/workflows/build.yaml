@@ -48,7 +48,7 @@ jobs:
       - name: Merge changes
         run: |
           git checkout -b prod-deployment origin/prod-deployment || git checkout prod-deployment
-          git merge prod --allow-unrelated-histories -m "Merge to deployment"
+          git merge prod -m "Merge to deployment"
 
       - name: Push changes to deployment branch
         env:
