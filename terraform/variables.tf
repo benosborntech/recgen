@@ -21,17 +21,17 @@ variable "cluster_name" {
 
 variable "cluster_min_nodes" {
   type    = number
-  default = 1
+  default = 2
 }
 
 variable "cluster_max_nodes" {
   type    = number
-  default = 1
+  default = 2
 }
 
 variable "cluster_node_size" {
   type    = string
-  default = "s-2vcpu-4gb"
+  default = "s-1vcpu-2gb"
 }
 
 # Container registry
