@@ -31,7 +31,7 @@ variable "cluster_max_nodes" {
 
 variable "cluster_node_size" {
   type    = string
-  default = "s-1vcpu-2gb"
+  default = "s-2vcpu-4gb"
 }
 
 # Container registry
