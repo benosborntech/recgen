@@ -46,7 +46,7 @@ jobs:
 
       - name: Merge changes
         run: |
-          git merge --no-ff prod -m "Merge to deployment"
+          git merge prod -m "Merge to deployment"
 
       - name: Push changes to deployment branch
         env:
