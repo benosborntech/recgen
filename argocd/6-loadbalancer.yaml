@@ -9,7 +9,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /
+          - path: /v1/submitevent
             pathType: Prefix  
             backend:
               service:
