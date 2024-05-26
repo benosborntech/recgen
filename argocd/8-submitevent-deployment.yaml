@@ -15,6 +15,7 @@ spec:
       containers:
       - name: submitevent
         image: registry.digitalocean.com/recgencr/submitevent:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 3000
         env:
