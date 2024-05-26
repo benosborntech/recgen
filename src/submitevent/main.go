@@ -34,9 +34,8 @@ func main() {
 	config := config.NewConfig(logger, writer)
 
 	app := fiber.New()
-	v1 := app.Group("/v1")
 
-	v1.Post("/event", handler.SubmitEvent(config))
+	app.Post("/", handler.SubmitEvent(config))
 
 	app.Listen(port)
 }
