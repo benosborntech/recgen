@@ -6,9 +6,9 @@ COPY go.mod .
 COPY go.sum .
 RUN go mod download
 
-COPY main.go .
+COPY ./ ./
 
-RUN go build -o main main.go
+RUN go build -o main submitevent/main.go
 
 FROM alpine:latest as run
 
