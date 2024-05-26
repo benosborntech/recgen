@@ -3,6 +3,10 @@ variable "digitalocean_token" {
   type = string
 }
 
+variable "digitalocean_user" {
+  type = string
+}
+
 variable "digitalocean_project" {
   type    = string
   default = "recgen"
