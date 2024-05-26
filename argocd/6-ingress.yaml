@@ -4,15 +4,14 @@ metadata:
   name: ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
-    kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
-  - http:
-      paths:
-      - path: /v1/submitevent
-        pathType: Prefix
-        backend:
-          service:
-            name: submitevent
-            port:
-              number: 3000
+    - http:
+        paths:
+          - path: /v1/submitevent
+            pathType: Prefix  
+            backend:
+              service:
+                name: submitevent
+                port:
+                  number: 3000
