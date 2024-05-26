@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: submitevent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: submitevent
+  template:
+    metadata:
+      labels:
+        service: submitevent
+    spec:
+      containers:
+      - name: submitevent
+        image: registry.digitalocean.com/recgencr/submitevent:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: PORT
+          value: "3000"
+        - name: KAFKA_BROKER
+          value: "kafka:29092"
