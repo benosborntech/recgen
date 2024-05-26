@@ -23,15 +23,15 @@ func NewLogger() *Logger {
 	}
 }
 
-func (l *Logger) Info(a ...any) {
-	l.info.Println(a...)
+func (l *Logger) Info(msg string, a ...any) {
+	l.info.Printf(msg+"\n", a...)
 }
 
-func (l *Logger) Error(a ...any) {
-	l.err.Println(a...)
+func (l *Logger) Error(msg string, a ...any) {
+	l.err.Printf(msg+"\n", a...)
 }
 
-func (l *Logger) Fatal(a ...any) {
-	l.fatal.Println(a...)
+func (l *Logger) Fatal(msg string, a ...any) {
+	l.fatal.Printf(msg+"\n", a...)
 	os.Exit(1)
 }
