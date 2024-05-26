@@ -11,3 +11,6 @@ apply:
 
 argo:
 	kubectl port-forward svc/argocd-server -n argocd 8080:443
+
+build-submitevent:
+	docker build -t submitevent -f src/docker/submitevent.Dockerfile src
