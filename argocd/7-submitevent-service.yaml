@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: submitevent
+spec:
+  selector:
+    service: submitevent
+  ports:
+  - name: submitevent
+    port: 3000
