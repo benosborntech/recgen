@@ -19,12 +19,6 @@ spec:
       containers:
       - name: kafka
         image: confluentinc/cp-kafka:7.0.1
-        command:
-          - sh
-          - -c
-          - |
-            #!/bin/sh
-            kafka-topics --bootstrap-server kafka:29092 --create --topic event-topic --partitions 1 --replication-factor 1
         ports:
           - containerPort: 29092
           - containerPort: 9092
