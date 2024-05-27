@@ -37,6 +37,10 @@ spec:
         volumeMounts:
           - mountPath: /var/lib/kafka/
             name: kafka-data
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "kafka-topics --bootstrap-server kafka:29092 --create --topic event-topic --partitions 1 --replication-factor 1"]
       hostname: kafka
       restartPolicy: Always
   volumeClaimTemplates:
