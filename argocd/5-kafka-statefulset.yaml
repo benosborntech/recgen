@@ -24,7 +24,7 @@ spec:
           - -c
           - |
             #!/bin/sh
-            kafka-topics --create --topic event-topic --partitions 1 --replication-factor 1
+            kafka-topics --bootstrap-server kafka:29092 --create --topic event-topic --partitions 1 --replication-factor 1
         ports:
           - containerPort: 29092
           - containerPort: 9092
