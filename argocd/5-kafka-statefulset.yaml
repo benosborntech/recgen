@@ -24,7 +24,7 @@ spec:
           - -c
           - |
             #!/bin/sh
-            kafka-topics --create --topic event-topic --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:2181
+            kafka-topics --create --topic event-topic --partitions 1 --replication-factor 1
         ports:
           - containerPort: 29092
           - containerPort: 9092
