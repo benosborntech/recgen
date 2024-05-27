@@ -40,8 +40,7 @@ spec:
         lifecycle:
           postStart:
             exec:
-              command: ["/bin/sh", "-c", "kafka-topics --bootstrap-server kafka:29092 --create --topic event-topic --partitions 1 --replication-factor 1"]
-      hostname: kafka
+              command: ["/bin/sh", "-c", "kafka-topics --bootstrap-server kafka-0.kafka:29092 --create --topic event-topic --partitions 1 --replication-factor 1"]
       restartPolicy: Always
   volumeClaimTemplates:
     - metadata:
