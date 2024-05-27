@@ -11,7 +11,7 @@ import (
 
 type Body struct {
 	UserId string `json:"userId"`
-	RecId  string `json:"recId"`
+	ItemId string `json:"itemId"`
 }
 
 func SubmitEvent(cfg *config.Config) func(c *fiber.Ctx) {
