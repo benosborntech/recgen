@@ -19,14 +19,18 @@ spec:
       containers:
       - name: kafka
         image: confluentinc/cp-kafka:7.0.1
+        command:
+          - sh
+          - -c
+          - |
+            #!/bin/sh
+            kafka-topics --create --topic event-topic --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:2181
         ports:
           - containerPort: 29092
           - containerPort: 9092
         env:
           - name: KAFKA_ADVERTISED_LISTENERS
             value: "INTERNAL://:29092,LISTENER_EXTERNAL://:9092"
-          - name: KAFKA_CREATE_TOPICS
-            value: "event-topic:1:1"
           - name: KAFKA_INTER_BROKER_LISTENER_NAME
             value: "INTERNAL"
           - name: KAFKA_LISTENERS
