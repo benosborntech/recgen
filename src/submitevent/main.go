@@ -5,7 +5,6 @@ import (
 
 	"github.com/benosborntech/recgen/submitevent/config"
 	"github.com/benosborntech/recgen/submitevent/handler"
-	"github.com/benosborntech/recgen/utils/ckafka"
 	"github.com/benosborntech/recgen/utils/constants"
 	"github.com/benosborntech/recgen/utils/logger"
 	"github.com/gofiber/fiber"
@@ -26,33 +25,7 @@ func main() {
 	if !ok {
 		logger.Fatal("failed to get broker")
 	}
-
 	logger.Info("using kafka broker %s", kafkaBroker)
-
-	// Create topics
-	logger.Info("initializing controller")
-
-	cKafka, err := ckafka.NewCKafka(kafkaBroker)
-	if err != nil {
-		logger.Fatal("failed to create ckafka: %v", err)
-	}
-	defer cKafka.Close()
-
-	logger.Info("creating topics")
-
-	topics := []kafka.TopicConfig{
-		{
-			Topic:             constants.EventTopic,
-			NumPartitions:     1,
-			ReplicationFactor: 1,
-		},
-	}
-	if err := cKafka.CreateTopics(topics); err != nil {
-		logger.Fatal("failed to create topic: %v", err)
-	}
-
-	// Initialize application
-	logger.Info("initializing writer")
 
 	writer := kafka.NewWriter(kafka.WriterConfig{
 		Brokers: []string{kafkaBroker},
@@ -61,8 +34,6 @@ func main() {
 	defer writer.Close()
 
 	config := config.NewConfig(logger, writer)
-
-	logger.Info("starting app")
 
 	app := fiber.New()
 
