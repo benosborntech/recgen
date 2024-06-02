@@ -30,16 +30,16 @@ spec:
             value: "INTERNAL:PLAINTEXT,LISTENER_EXTERNAL:PLAINTEXT"
           - name: KAFKA_ZOOKEEPER_CONNECT
             value: "zookeeper:2181"
-        volumeMounts:
-          - mountPath: /var/lib/kafka/
-            name: kafka-data
+        # volumeMounts:
+        #   - mountPath: /var/lib/kafka/
+        #     name: kafka-data
       restartPolicy: Always
-  volumeClaimTemplates:
-    - metadata:
-        name: kafka-data
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 1Gi
+  # volumeClaimTemplates:
+  #   - metadata:
+  #       name: kafka-data
+  #     spec:
+  #       accessModes:
+  #         - ReadWriteOnce
+  #       resources:
+  #         requests:
+  #           storage: 1Gi

@@ -27,26 +27,26 @@ spec:
               value: "/var/lib/zookeeper/log"
             - name: ZOOKEEPER_SERVER_ID
               value: "1"
-          volumeMounts:
-            - mountPath: /var/lib/zookeeper/data
-              name: zookeeper-data
-            - mountPath: /var/lib/zookeeper/log
-              name: zookeeper-log
+          # volumeMounts:
+          #   - mountPath: /var/lib/zookeeper/data
+          #     name: zookeeper-data
+          #   - mountPath: /var/lib/zookeeper/log
+          #     name: zookeeper-log
       restartPolicy: Always
-  volumeClaimTemplates:
-    - metadata:
-        name: zookeeper-data
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 1024Mi
-    - metadata:
-        name: zookeeper-log
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 1024Mi
+  # volumeClaimTemplates:
+  #   - metadata:
+  #       name: zookeeper-data
+  #     spec:
+  #       accessModes:
+  #         - ReadWriteOnce
+  #       resources:
+  #         requests:
+  #           storage: 1024Mi
+  #   - metadata:
+  #       name: zookeeper-log
+  #     spec:
+  #       accessModes:
+  #         - ReadWriteOnce
+  #       resources:
+  #         requests:
+  #           storage: 1024Mi

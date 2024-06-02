@@ -35,7 +35,7 @@ func main() {
 	defer cKafka.Close()
 
 	topics := []kafka.TopicConfig{
-		{Topic: constants.EventTopic, NumPartitions: 1, ReplicationFactor: 1},
+		{Topic: constants.EventTopic},
 	}
 	if err := cKafka.CreateTopics(topics); err != nil {
 		logger.Fatal("failed to create topic: %w", err)
