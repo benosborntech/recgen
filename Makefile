@@ -21,5 +21,5 @@ build-submitevent:
 kafka-create-topics:
 	kubectl exec -it kafka-0 -n app -- kafka-topics --create --topic event-topic --partitions 1 --replication-factor 1 --bootstrap-server kafka:29092
 
-kafka-list-topics:
-	kubectl exec -it kafka-0 -n app -- kafka-topics --list --bootstrap-server kafka:29092
+kafka-topics:
+	kubectl exec -it kafka-0 -n app -- kafka-topics --describe --bootstrap-server kafka:29092
