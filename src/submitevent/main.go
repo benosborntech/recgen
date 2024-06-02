@@ -30,15 +30,19 @@ func main() {
 	// Create topics
 	cKafka, err := ckafka.NewCKafka(kafkaBroker)
 	if err != nil {
-		logger.Fatal("failed to create ckafka: %w", err)
+		logger.Fatal("failed to create ckafka: %v", err)
 	}
 	defer cKafka.Close()
 
 	topics := []kafka.TopicConfig{
-		{Topic: constants.EventTopic},
+		{
+			Topic:             constants.EventTopic,
+			NumPartitions:     1,
+			ReplicationFactor: 1,
+		},
 	}
 	if err := cKafka.CreateTopics(topics); err != nil {
-		logger.Fatal("failed to create topic: %w", err)
+		logger.Fatal("failed to create topic: %v", err)
 	}
 
 	// Initialize application
