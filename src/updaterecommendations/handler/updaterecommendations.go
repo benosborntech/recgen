@@ -84,8 +84,8 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 				}
 			}
 		} else {
-			if _, err := rdb.BFAdd(cfg.Context, body.UserId, body.ItemId).Result(); err != nil {
-				return fmt.Errorf("bloom filter add error: %v", err)
+			if _, err := rdb.BFInsert(cfg.Context, body.UserId, &redis.BFInsertOptions{Capacity: 1000}, body.ItemId).Result(); err != nil {
+				return fmt.Errorf("bloom filter insert error: %v", err)
 			}
 			if _, err := rdb.ZRem(cfg.Context, body.UserId, body.ItemId).Result(); err != nil {
 				return fmt.Errorf("sorted set remove error: %v", err)
