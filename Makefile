@@ -21,10 +21,7 @@ build-submitevent:
 	docker build -t submitevent -f src/docker/submitevent.Dockerfile src
 
 kafka-create-topics:
-	kubectl exec -it kafka-0 -n app -- kafka-topics --create --topic $(EVENT_TOPIC) --partitions 1 --replication-factor 1 --bootstrap-server kafka:29092
+	kubectl exec -it kafka-0 -n app -- kafka-topics --create --topic $(EVENT_TOPIC) --partitions 1 --replication-factor 1 --bootstrap-server kafka:9092
 
 kafka-topics:
-	kubectl exec -it kafka-0 -n app -- kafka-topics --describe --bootstrap-server kafka:29092
-
-kafka-messages:
-	kubectl exec -it kafka-0 -n app -- kafka-console-consumer --bootstrap-server kafka:9092 --topic $(EVENT_TOPIC) --from-beginning
+	kubectl exec -it kafka-0 -n app -- kafka-topics --describe --bootstrap-server kafka:9092

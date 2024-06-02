@@ -24,4 +24,4 @@ spec:
         - name: PORT
           value: "3000"
         - name: KAFKA_BROKER
-          value: "kafka:29092"
+          value: "kafka:9092"
