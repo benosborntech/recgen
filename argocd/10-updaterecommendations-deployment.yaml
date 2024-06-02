@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: updaterecommendations
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: updaterecommendations
+  template:
+    metadata:
+      labels:
+        service: updaterecommendations
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      containers:
+      - name: updaterecommendations
+        image: registry.digitalocean.com/recgencr/updaterecommendations:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: PORT
+          value: "3000"
+        - name: KAFKA_BROKER
+          value: "kafka:9092"
+        - name: REDIS_ADDR
+          value: "redis:6379"

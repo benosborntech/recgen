@@ -3,29 +3,20 @@ package main
 import (
 	"os"
 
-	"github.com/benosborntech/recgen/submitevent/config"
 	"github.com/benosborntech/recgen/submitevent/handler"
+	"github.com/benosborntech/recgen/utils/config"
 	"github.com/benosborntech/recgen/utils/constants"
-	"github.com/benosborntech/recgen/utils/logger"
 	"github.com/gofiber/fiber"
 	"github.com/segmentio/kafka-go"
 )
 
 func main() {
-	// Setup
-	logger := logger.NewLogger()
-
-	port, ok := os.LookupEnv("PORT")
-	if !ok {
-		port = "3000"
-	}
-	logger.Info("using port %s", port)
+	c := config.NewConfig()
 
 	kafkaBroker, ok := os.LookupEnv("KAFKA_BROKER")
 	if !ok {
-		logger.Fatal("failed to get broker")
+		c.Logger.Fatal("failed to get kafka broker")
 	}
-	logger.Info("using kafka broker %s", kafkaBroker)
 
 	writer := kafka.NewWriter(kafka.WriterConfig{
 		Brokers: []string{kafkaBroker},
@@ -33,11 +24,9 @@ func main() {
 	})
 	defer writer.Close()
 
-	config := config.NewConfig(logger, writer)
-
 	app := fiber.New()
 
-	app.Post("/", handler.SubmitEvent(config))
+	app.Post("/", handler.SubmitEvent(c, writer))
 
-	app.Listen(port)
+	app.Listen(c.Port)
 }
