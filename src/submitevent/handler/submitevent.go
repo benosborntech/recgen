@@ -5,18 +5,14 @@ import (
 	"fmt"
 
 	"github.com/benosborntech/recgen/utils/config"
+	"github.com/benosborntech/recgen/utils/model"
 	"github.com/gofiber/fiber"
 	"github.com/segmentio/kafka-go"
 )
 
-type Body struct {
-	UserId string `json:"userId"`
-	ItemId string `json:"itemId"`
-}
-
 func SubmitEvent(cfg *config.Config, writer *kafka.Writer) func(c *fiber.Ctx) {
 	return func(c *fiber.Ctx) {
-		var body Body
+		var body model.Body
 
 		if err := json.Unmarshal([]byte(c.Body()), &body); err != nil {
 			err = fmt.Errorf("failed to parse: %v", err)
