@@ -13,9 +13,6 @@ spec:
       labels:
         service: kafka
     spec:
-      securityContext:
-        fsGroup: 1000
-      enableServiceLinks: false
       containers:
       - name: kafka
         image: confluentinc/cp-kafka:7.0.1

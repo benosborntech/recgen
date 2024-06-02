@@ -13,9 +13,6 @@ spec:
       labels:
         service: zookeeper
     spec:
-      securityContext:
-        fsGroup: 1000
-      enableServiceLinks: false
       containers:
         - name: zookeeper
           image: confluentinc/cp-zookeeper:7.3.2
@@ -30,13 +27,11 @@ spec:
               value: "/var/lib/zookeeper/log"
             - name: ZOOKEEPER_SERVER_ID
               value: "1"
-          resources: {}
           volumeMounts:
             - mountPath: /var/lib/zookeeper/data
               name: zookeeper-data
             - mountPath: /var/lib/zookeeper/log
               name: zookeeper-log
-      hostname: zookeeper
       restartPolicy: Always
   volumeClaimTemplates:
     - metadata:
