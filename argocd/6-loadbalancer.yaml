@@ -17,3 +17,10 @@ spec:
                 name: submitevent
                 port:
                   number: 3000
+          - path: /v1/getrecommendations(/|$)(.*)
+            pathType: Prefix  
+            backend:
+              service:
+                name: getrecommendations
+                port:
+                  number: 3000

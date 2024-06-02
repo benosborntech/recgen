@@ -24,7 +24,7 @@ func main() {
 
 	app := fiber.New()
 
-	app.Post("/:userId", handler.GetRecommendations(c, rdb))
+	app.Get("/:userId", handler.GetRecommendations(c, rdb))
 
 	app.Listen(c.Port)
 }
