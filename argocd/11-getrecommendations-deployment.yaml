@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: getrecommendations
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: getrecommendations
+  template:
+    metadata:
+      labels:
+        service: getrecommendations
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      containers:
+      - name: getrecommendations
+        image: registry.digitalocean.com/recgencr/getrecommendations:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: PORT
+          value: "3000"
+        - name: REDIS_ADDR
+          value: "redis:6379"
