@@ -18,16 +18,16 @@ spec:
         image: redis:latest
         ports:
         - containerPort: 6379
-        # volumeMounts:
-        # - name: redis-data
-        #   mountPath: /data
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
       restartPolicy: Always
-  # volumeClaimTemplates:
-  # - metadata:
-  #     name: redis-data
-  #   spec:
-  #     accessModes:
-  #       - ReadWriteOnce
-  #     resources:
-  #       requests:
-  #         storage: 1Gi
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-data
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
