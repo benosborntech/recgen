@@ -1,7 +1,9 @@
 SHELL := /bin/bash
 
-ENV_FILE = ".env"
-TERRAFORM_DIR = "terraform"
+ENV_FILE = .env
+TERRAFORM_DIR = terraform
+
+EVENT_TOPIC = event-topic
 
 init:
 	cd $(TERRAFORM_DIR) && terraform init
@@ -19,7 +21,10 @@ build-submitevent:
 	docker build -t submitevent -f src/docker/submitevent.Dockerfile src
 
 kafka-create-topics:
-	kubectl exec -it kafka-0 -n app -- kafka-topics --create --topic event-topic --partitions 1 --replication-factor 1 --bootstrap-server kafka:29092
+	kubectl exec -it kafka-0 -n app -- kafka-topics --create --topic $(EVENT_TOPIC) --partitions 1 --replication-factor 1 --bootstrap-server kafka:29092
 
 kafka-topics:
 	kubectl exec -it kafka-0 -n app -- kafka-topics --describe --bootstrap-server kafka:29092
+
+kafka-messages:
+	kubectl exec -it kafka-0 -n app -- kafka-console-consumer --bootstrap-server kafka:9092 --topic $(EVENT_TOPIC) --from-beginning

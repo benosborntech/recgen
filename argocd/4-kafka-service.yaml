@@ -10,4 +10,4 @@ spec:
   - name: internal
     port: 29092
   - name: external
-    port: 30092
+    port: 9092
