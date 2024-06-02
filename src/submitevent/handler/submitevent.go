@@ -19,7 +19,7 @@ func SubmitEvent(cfg *config.Config, writer *kafka.Writer) func(c *fiber.Ctx) {
 		var body Body
 
 		if err := json.Unmarshal([]byte(c.Body()), &body); err != nil {
-			err = fmt.Errorf("failed to parse: %w", err)
+			err = fmt.Errorf("failed to parse: %v", err)
 
 			cfg.Logger.Error(err.Error())
 			c.Status(fiber.StatusBadRequest).Send(err.Error())
@@ -29,7 +29,7 @@ func SubmitEvent(cfg *config.Config, writer *kafka.Writer) func(c *fiber.Ctx) {
 
 		encoded, err := json.Marshal(body)
 		if err != nil {
-			err = fmt.Errorf("failed to encode: %w", err)
+			err = fmt.Errorf("failed to encode: %v", err)
 
 			cfg.Logger.Error(err.Error())
 			c.Status(fiber.StatusInternalServerError).Send(err.Error())
@@ -41,7 +41,7 @@ func SubmitEvent(cfg *config.Config, writer *kafka.Writer) func(c *fiber.Ctx) {
 			Value: encoded,
 		}
 		if err := writer.WriteMessages(c.Context(), message); err != nil {
-			err = fmt.Errorf("failed to write message: %w", err)
+			err = fmt.Errorf("failed to write message: %v", err)
 
 			cfg.Logger.Error(err.Error())
 			c.Status(fiber.StatusInternalServerError).Send(err.Error())

@@ -29,7 +29,6 @@ func main() {
 	reader := kafka.NewReader(kafka.ReaderConfig{
 		Brokers: []string{kafkaBroker},
 		Topic:   constants.EventTopic,
-		GroupID: "0",
 	})
 	defer reader.Close()
 
@@ -43,18 +42,18 @@ func main() {
 	for {
 		msg, err := reader.ReadMessage(c.Context)
 		if err != nil {
-			c.Logger.Error("failed to read message: %w", err)
+			c.Logger.Error("failed to read message: %v", err)
 			continue
 		}
 
 		var body model.Body
 		if err := json.Unmarshal(msg.Value, &body); err != nil {
-			c.Logger.Error("failed to parse body: %w", err)
+			c.Logger.Error("failed to parse body: %v", err)
 			continue
 		}
 
 		if err := handler.UpdateRecommendations(c, body, rdb, lockClient); err != nil {
-			c.Logger.Error("update recommendations failed: %w", err)
+			c.Logger.Error("update recommendations failed: %v", err)
 			continue
 		}
 	}
