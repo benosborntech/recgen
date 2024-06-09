@@ -84,8 +84,8 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 				}
 			}
 		} else {
-			args := []interface{}{"BF.INSERT", "Ben", "CAPACITY", "1000", "ERROR", "0.01", "ITEMS"}
-			args = append(args, "item1")
+			// args := []interface{}{"BF.INSERT", "Ben", "CAPACITY", "1000", "ERROR", "0.01", "ITEMS", "item1"}
+			args := []interface{}{"SET", "hello", "world"}
 			cfg.Logger.Info("Args: %v", args)
 
 			if _, err := rdb.Do(cfg.Context, args...).Result(); err != nil {
