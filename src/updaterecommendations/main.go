@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"io"
 	"os"
 
 	"github.com/benosborntech/recgen/updaterecommendations/handler"
@@ -11,6 +12,10 @@ import (
 	"github.com/bsm/redislock"
 	"github.com/redis/go-redis/v9"
 	"github.com/segmentio/kafka-go"
+)
+
+const (
+	DATA_FILE_PATH = "data.json"
 )
 
 func main() {
@@ -38,6 +43,22 @@ func main() {
 	defer rdb.Close()
 
 	lockClient := redislock.New(rdb)
+
+	file, err := os.Open(DATA_FILE_PATH)
+	if err != nil {
+		c.Logger.Fatal("failed to load file: %v", err)
+	}
+	bytes, err := io.ReadAll(file)
+	if err != nil {
+		c.Logger.Fatal("failed to read file: %v", err)
+	}
+	var data model.Data
+	if err := json.Unmarshal(bytes, &data); err != nil {
+		c.Logger.Fatal("failed to load data: %v", err)
+	}
+	if err := handler.Startup(c.Context, data, rdb); err != nil {
+		c.Logger.Fatal("failed to startup: %v", err)
+	}
 
 	for {
 		msg, err := reader.ReadMessage(c.Context)

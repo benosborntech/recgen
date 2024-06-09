@@ -27,7 +27,7 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 
 		if body.Positive {
 			// First we will look the element up by its value using some kind of database search to find the corresponding vector
-			vectorJson, err := rdb.HGet(cfg.Context, constants.DBName, body.ItemId).Result()
+			vectorJson, err := rdb.HGet(cfg.Context, misc.KeyConcat(constants.DB_PREFIX, body.ItemId), "vector").Result()
 			if err != nil {
 				return fmt.Errorf("get item error: %v", err)
 			}
