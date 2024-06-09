@@ -33,11 +33,15 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 			if err != nil {
 				return fmt.Errorf("get item error: %v", err)
 			}
-			var vectorArr []string
-			if err := json.Unmarshal([]byte(vectorRaw), &vectorArr); err != nil {
+			var vectorFloat []float32
+			if err := json.Unmarshal([]byte(vectorRaw), &vectorFloat); err != nil {
 				return fmt.Errorf("parse vector error: %v", err)
 			}
-			vector := strings.Join(vectorArr, " ")
+			vectorString := []string{}
+			for _, elem := range vectorFloat {
+				vectorString = append(vectorString, fmt.Sprint(elem))
+			}
+			vector := strings.Join(vectorString, " ")
 
 			// Then we search for a list of new vectors, rank them, then attempt to add them to our list
 			cursor := 0
