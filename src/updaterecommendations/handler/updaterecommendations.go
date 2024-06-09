@@ -41,8 +41,9 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 			var count int64
 
 			for condition {
-				res, err := rdb.Do(cfg.Context, "FT.SEARCH", constants.VectorIndexName, "*=>[KNN 10 @embedding $vec AS score]",
-					"SORTBY", "score", "DESC", "LIMIT", cursor, pageSize, "PARAMS", "2", "vec", vector).Result()
+				// res, err := rdb.Do(cfg.Context, "FT.SEARCH", constants.VectorIndexName, "(*)=>[KNN 10 @vector $vec AS score]",
+				// 	"SORTBY", "score", "DESC", "LIMIT", cursor, pageSize, "PARAMS", "2", "vec", vector).Result()
+				res, err := rdb.Do(cfg.Context, "FT.SEARCH", constants.VectorIndexName, fmt.Sprintf("@vector:[%s] KNN %d", vector, constants.MaxRecommendations)).Result()
 				if err != nil {
 					return fmt.Errorf("vector search error: %v", err)
 				}
