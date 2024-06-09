@@ -1,9 +1,7 @@
 package handler
 
 import (
-	"encoding/json"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/benosborntech/recgen/utils/config"
@@ -29,19 +27,10 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 
 		if body.Positive {
 			// First we will look the element up by its value using some kind of database search to find the corresponding vector
-			vectorRaw, err := rdb.HGet(cfg.Context, misc.KeyConcat(constants.DB_PREFIX, body.ItemId), "vector").Result()
+			vector, err := rdb.HGet(cfg.Context, misc.KeyConcat(constants.DB_PREFIX, body.ItemId), "vector").Result()
 			if err != nil {
 				return fmt.Errorf("get item error: %v", err)
 			}
-			var vectorFloat []float32
-			if err := json.Unmarshal([]byte(vectorRaw), &vectorFloat); err != nil {
-				return fmt.Errorf("parse vector error: %v", err)
-			}
-			vectorString := []string{}
-			for _, elem := range vectorFloat {
-				vectorString = append(vectorString, fmt.Sprint(elem))
-			}
-			vector := strings.Join(vectorString, " ")
 
 			// Then we search for a list of new vectors, rank them, then attempt to add them to our list
 			cursor := 0

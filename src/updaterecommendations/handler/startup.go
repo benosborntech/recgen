@@ -2,8 +2,8 @@ package handler
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/benosborntech/recgen/utils/constants"
 	"github.com/benosborntech/recgen/utils/misc"
@@ -13,12 +13,13 @@ import (
 
 func Startup(ctx context.Context, data model.Data, rdb *redis.Client) error {
 	for key, value := range data {
-		serialized, err := json.Marshal(value.Vector)
-		if err != nil {
-			return fmt.Errorf("serialize failed: %v", err)
+		vectorString := []string{}
+		for _, elem := range value.Vector {
+			vectorString = append(vectorString, fmt.Sprint(elem))
 		}
+		vector := strings.Join(vectorString, " ")
 
-		if _, err := rdb.HSet(ctx, misc.KeyConcat(constants.DB_PREFIX, key), "title", value.Title, "description", value.Description, "vector", serialized).Result(); err != nil {
+		if _, err := rdb.HSet(ctx, misc.KeyConcat(constants.DB_PREFIX, key), "title", value.Title, "description", value.Description, "vector", vector).Result(); err != nil {
 			return fmt.Errorf("set vector error: %v", err)
 		}
 	}
