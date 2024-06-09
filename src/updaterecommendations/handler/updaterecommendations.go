@@ -6,7 +6,6 @@ import (
 
 	"github.com/benosborntech/recgen/utils/config"
 	"github.com/benosborntech/recgen/utils/constants"
-	"github.com/benosborntech/recgen/utils/misc"
 	"github.com/benosborntech/recgen/utils/model"
 	"github.com/bsm/redislock"
 	"github.com/redis/go-redis/v9"
@@ -85,7 +84,11 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 				}
 			}
 		} else {
-			if _, err := rdb.Do(cfg.Context, "BF.INSERT", append([]interface{}{body.UserId, "CAPACITY", 1000, "ERROR", 0.01, "ITEMS"}, misc.StringToISlice([]string{body.ItemId})...)).Result(); err != nil {
+			args := []interface{}{body.UserId, "CAPACITY", 1000, "ERROR", 0.01, "ITEMS"}
+			args = append(args, body.ItemId)
+			cfg.Logger.Info("Args: %v", args)
+
+			if _, err := rdb.Do(cfg.Context, append([]interface{}{"BF.INSERT"}, args...)).Result(); err != nil {
 				return fmt.Errorf("bloom filter insert error: %v", err)
 			}
 
