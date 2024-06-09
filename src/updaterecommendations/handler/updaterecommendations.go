@@ -6,6 +6,7 @@ import (
 
 	"github.com/benosborntech/recgen/utils/config"
 	"github.com/benosborntech/recgen/utils/constants"
+	"github.com/benosborntech/recgen/utils/misc"
 	"github.com/benosborntech/recgen/utils/model"
 	"github.com/bsm/redislock"
 	"github.com/redis/go-redis/v9"
@@ -17,7 +18,7 @@ const maxRecommendations = 10
 
 func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Client, lockClient *redislock.Client) error {
 	for {
-		lock, err := lockClient.Obtain(cfg.Context, body.UserId, duration, &redislock.Options{})
+		lock, err := lockClient.Obtain(cfg.Context, misc.KeyConcat(constants.LOCK_PREFIX, body.UserId), duration, &redislock.Options{})
 		if err == redislock.ErrNotObtained {
 			continue
 		} else if err != nil {
@@ -54,19 +55,19 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 				}
 
 				for _, result := range results {
-					exists, err := rdb.BFExists(cfg.Context, body.UserId, body.ItemId).Result()
+					exists, err := rdb.BFExists(cfg.Context, misc.KeyConcat(constants.BF_PREFIX, body.UserId), body.ItemId).Result()
 					if err != nil {
 						return fmt.Errorf("bloom filter exists failed: %v", err)
 					} else if exists {
 						continue
 					}
 
-					if _, err := rdb.ZAdd(cfg.Context, body.UserId, redis.Z{Score: result.Score, Member: body.ItemId}).Result(); err != nil {
+					if _, err := rdb.ZAdd(cfg.Context, misc.KeyConcat(constants.SET_PREFIX, body.UserId), redis.Z{Score: result.Score, Member: body.ItemId}).Result(); err != nil {
 						return fmt.Errorf("add item to set failed: %v", err)
 					}
 				}
 
-				count, err = rdb.ZCount(cfg.Context, body.UserId, "0", "1").Result()
+				count, err = rdb.ZCount(cfg.Context, misc.KeyConcat(constants.SET_PREFIX, body.UserId), "0", "1").Result()
 				if err != nil {
 					return fmt.Errorf("set count failed: %v", err)
 				}
@@ -79,16 +80,16 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 			toRemove := count - maxRecommendations
 
 			if toRemove > 0 {
-				if _, err := rdb.ZPopMin(cfg.Context, body.UserId, toRemove).Result(); err != nil {
+				if _, err := rdb.ZPopMin(cfg.Context, misc.KeyConcat(constants.SET_PREFIX, body.UserId), toRemove).Result(); err != nil {
 					return fmt.Errorf("pop items failed: %v", err)
 				}
 			}
 		} else {
-			if _, err := rdb.Do(cfg.Context, "BF.ADD", body.UserId, body.ItemId).Bool(); err != nil {
+			if _, err := rdb.BFAdd(cfg.Context, misc.KeyConcat(constants.BF_PREFIX, body.UserId), body.ItemId).Result(); err != nil {
 				return fmt.Errorf("bloom filter add error: %v", err)
 			}
 
-			if _, err := rdb.Do(cfg.Context, "ZREM", body.UserId, body.ItemId).Bool(); err != nil {
+			if _, err := rdb.ZRem(cfg.Context, misc.KeyConcat(constants.SET_PREFIX, body.UserId), body.ItemId).Result(); err != nil {
 				return fmt.Errorf("sorted set remove error: %v", err)
 			}
 		}
