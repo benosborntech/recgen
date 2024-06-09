@@ -14,7 +14,6 @@ import (
 
 const duration = 30 * time.Second
 const pageSize = 20
-const maxRecommendations = 3
 
 func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Client, lockClient *redislock.Client) error {
 	for {
@@ -72,12 +71,12 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 					return fmt.Errorf("set count failed: %v", err)
 				}
 
-				condition = count < maxRecommendations && len(results) == int(count)
+				condition = count < constants.MaxRecommendations && len(results) == int(count)
 				cursor += pageSize
 			}
 
 			// Remove extra items from the set
-			toRemove := count - maxRecommendations
+			toRemove := count - constants.MaxRecommendations
 
 			if toRemove > 0 {
 				if _, err := rdb.ZPopMin(cfg.Context, misc.KeyConcat(constants.SET_PREFIX, body.UserId), toRemove).Result(); err != nil {

@@ -6,6 +6,8 @@ const VectorIndexName = "vector-index"
 
 const DBName = "items-db"
 
+const MaxRecommendations = 3
+
 // Key prefixes
 const (
 	BF_PREFIX   = "bf_prefix"
