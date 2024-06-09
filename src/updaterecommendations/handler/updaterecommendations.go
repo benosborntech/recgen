@@ -84,15 +84,13 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 				}
 			}
 		} else {
-			// args := []interface{}{"BF.INSERT", "Ben", "CAPACITY", "1000", "ERROR", "0.01", "ITEMS", "item1"}
-			args := []interface{}{"SET", "hello", "world"}
-			cfg.Logger.Info("Args: %v", args)
-
+			args := []interface{}{"BF.ADD", "Ben", "ITEMS", "item1"}
 			if _, err := rdb.Do(cfg.Context, args...).Result(); err != nil {
 				return fmt.Errorf("bloom filter insert error: %v", err)
 			}
 
-			if _, err := rdb.ZRem(cfg.Context, body.UserId, body.ItemId).Result(); err != nil {
+			args = []interface{}{"ZREM", body.UserId, body.ItemId}
+			if _, err := rdb.Do(cfg.Context, args...).Result(); err != nil {
 				return fmt.Errorf("sorted set remove error: %v", err)
 			}
 		}
