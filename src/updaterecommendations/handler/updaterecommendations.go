@@ -25,6 +25,8 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 		}
 		defer lock.Release(cfg.Context)
 
+		args := []interface{}{}
+
 		if body.Positive {
 			// First we will look the element up by its value using some kind of database search to find the corresponding vector
 			vectorJson, err := rdb.HGet(cfg.Context, constants.DBName, body.ItemId).Result()
@@ -84,9 +86,14 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 				}
 			}
 		} else {
-			args := []interface{}{"BF.ADD", body.UserId, body.ItemId}
+			args = []interface{}{"BF.RESERVE", body.UserId, "0.01", "1000"}
 			if _, err := rdb.Do(cfg.Context, args...).Result(); err != nil {
-				return fmt.Errorf("bloom filter insert error: %v", err)
+				return fmt.Errorf("bloom filter reserve error: %v", err)
+			}
+
+			args = []interface{}{"BF.ADD", body.UserId, body.ItemId}
+			if _, err := rdb.Do(cfg.Context, args...).Result(); err != nil {
+				return fmt.Errorf("bloom filter add error: %v", err)
 			}
 
 			args = []interface{}{"ZREM", body.UserId, body.ItemId}
