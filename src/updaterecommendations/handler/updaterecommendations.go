@@ -32,6 +32,8 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 				return fmt.Errorf("get item error: %v", err)
 			}
 
+			fmt.Println(vector)
+
 			// Then we search for a list of new vectors, rank them, then attempt to add them to our list
 			cursor := 0
 			condition := true
