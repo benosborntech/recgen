@@ -26,8 +26,6 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 		}
 		defer lock.Release(cfg.Context)
 
-		iBody := misc.StringToISlice([]string{body.ItemId})
-
 		if body.Positive {
 			// First we will look the element up by its value using some kind of database search to find the corresponding vector
 			vectorJson, err := rdb.HGet(cfg.Context, constants.DBName, body.ItemId).Result()
@@ -57,14 +55,14 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 				}
 
 				for _, result := range results {
-					exists, err := rdb.BFExists(cfg.Context, body.UserId, iBody[0]).Result()
+					exists, err := rdb.BFExists(cfg.Context, body.UserId, body.ItemId).Result()
 					if err != nil {
 						return fmt.Errorf("bloom filter exists failed: %v", err)
 					} else if exists {
 						continue
 					}
 
-					if _, err := rdb.ZAdd(cfg.Context, body.UserId, redis.Z{Score: result.Score, Member: iBody}).Result(); err != nil {
+					if _, err := rdb.ZAdd(cfg.Context, body.UserId, redis.Z{Score: result.Score, Member: body.ItemId}).Result(); err != nil {
 						return fmt.Errorf("add item to set failed: %v", err)
 					}
 				}
@@ -87,11 +85,11 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 				}
 			}
 		} else {
-			if _, err := rdb.BFInsert(cfg.Context, body.UserId, &redis.BFInsertOptions{Capacity: 1000}, iBody...).Result(); err != nil {
+			if _, err := rdb.Do(cfg.Context, "BF.INSERT", append([]interface{}{body.UserId, "CAPACITY", 1000, "ERROR", 0.01, "ITEMS"}, misc.StringToISlice([]string{body.ItemId})...)).Result(); err != nil {
 				return fmt.Errorf("bloom filter insert error: %v", err)
 			}
 
-			if _, err := rdb.ZRem(cfg.Context, body.UserId, iBody...).Result(); err != nil {
+			if _, err := rdb.ZRem(cfg.Context, body.UserId, body.ItemId).Result(); err != nil {
 				return fmt.Errorf("sorted set remove error: %v", err)
 			}
 		}
