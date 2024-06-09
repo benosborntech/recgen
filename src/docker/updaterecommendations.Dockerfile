@@ -14,6 +14,6 @@ FROM alpine:latest as run
 
 WORKDIR /app
 
-COPY --from=build /build/main .
+COPY --from=build /build/main /build/data.json ./
 
 CMD ["./main"]
