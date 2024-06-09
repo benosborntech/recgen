@@ -14,7 +14,7 @@ import (
 
 const duration = 30 * time.Second
 const pageSize = 20
-const maxRecommendations = 10
+const maxRecommendations = 3
 
 func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Client, lockClient *redislock.Client) error {
 	for {
