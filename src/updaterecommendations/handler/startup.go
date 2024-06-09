@@ -29,7 +29,7 @@ func Startup(ctx context.Context, data model.Data, rdb *redis.Client) error {
 		"SCHEMA",
 		"title", "TEXT",
 		"description", "TEXT",
-		"vector", "VECTOR", "HNSW", "12", "TYPE", "FLOAT32", "DIM", "1536", "DISTANCE_METRIC", "COSINE").Result(); err != nil && err.Error() != "Index already exists" {
+		"vector", "VECTOR", "HNSW", "6", "TYPE", "FLOAT32", "DIM", "1536", "DISTANCE_METRIC", "COSINE").Result(); err != nil && err.Error() != "Index already exists" {
 
 		return fmt.Errorf("create index error: %v", err)
 	}
