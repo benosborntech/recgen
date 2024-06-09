@@ -84,7 +84,7 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 				}
 			}
 		} else {
-			args := []interface{}{"BF.ADD", "Ben", "ITEMS", "item1"}
+			args := []interface{}{"BF.ADD", body.UserId, body.ItemId}
 			if _, err := rdb.Do(cfg.Context, args...).Result(); err != nil {
 				return fmt.Errorf("bloom filter insert error: %v", err)
 			}
