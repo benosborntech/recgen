@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/benosborntech/recgen/utils/config"
@@ -27,10 +29,15 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 
 		if body.Positive {
 			// First we will look the element up by its value using some kind of database search to find the corresponding vector
-			vectorJson, err := rdb.HGet(cfg.Context, misc.KeyConcat(constants.DB_PREFIX, body.ItemId), "vector").Result()
+			vectorRaw, err := rdb.HGet(cfg.Context, misc.KeyConcat(constants.DB_PREFIX, body.ItemId), "vector").Result()
 			if err != nil {
 				return fmt.Errorf("get item error: %v", err)
 			}
+			var vectorArr []string
+			if err := json.Unmarshal([]byte(vectorRaw), &vectorArr); err != nil {
+				return fmt.Errorf("parse vector error: %v", err)
+			}
+			vector := strings.Join(vectorArr, " ")
 
 			// Then we search for a list of new vectors, rank them, then attempt to add them to our list
 			cursor := 0
@@ -40,7 +47,7 @@ func UpdateRecommendations(cfg *config.Config, body model.Body, rdb *redis.Clien
 
 			for condition {
 				res, err := rdb.Do(cfg.Context, "FT.SEARCH", constants.VectorIndexName, "*=>[KNN 10 @embedding $vec AS score]",
-					"SORTBY", "score", "DESC", "LIMIT", cursor, pageSize, "PARAMS", "2", "vec", vectorJson).Result()
+					"SORTBY", "score", "DESC", "LIMIT", cursor, pageSize, "PARAMS", "2", "vec", vector).Result()
 				if err != nil {
 					return fmt.Errorf("vector search error: %v", err)
 				}
