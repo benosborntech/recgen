@@ -16,11 +16,15 @@ def handle(cfg: Config, r_client: redis.Redis, body: Body) -> None:
 
         base_query = f"*=>[KNN {MAX_RESULTS} @vector $vector AS vector_score]"
 
+        cursor = 0
+        condition = True
+        count = 0
+
         query = (
             Query(base_query)
             .return_fields("id", "vector")
             .sort_by("vector_score")
-            .paging(0, k)
+            .paging(cursor, cursor + MAX_RESULTS)
             .dialect(2)
         )
         params_dict = {"vector": vec}
