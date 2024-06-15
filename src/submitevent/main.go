@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
+	"github.com/benosborntech/recgen/goutils/config"
+	"github.com/benosborntech/recgen/goutils/constants"
 	"github.com/benosborntech/recgen/submitevent/handler"
-	"github.com/benosborntech/recgen/utils/config"
-	"github.com/benosborntech/recgen/utils/constants"
 	"github.com/gofiber/fiber"
 	"github.com/segmentio/kafka-go"
 )

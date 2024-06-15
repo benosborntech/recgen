@@ -13,13 +13,18 @@ spec:
         service: updaterecommendations
     spec:
       imagePullSecrets:
-      - name: regcred
+        - name: regcred
       containers:
-      - name: updaterecommendations
-        image: registry.digitalocean.com/recgencr/updaterecommendations:latest
-        imagePullPolicy: Always
-        env:
-        - name: KAFKA_BROKER
-          value: "kafka:9092"
-        - name: REDIS_ADDR
-          value: "redis:6379"
+        - name: updaterecommendations
+          image: registry.digitalocean.com/recgencr/updaterecommendations:latest
+          imagePullPolicy: Always
+          env:
+            - name: KAFKA_BROKER
+              value: "kafka:9092"
+            - name: REDIS_ADDR
+              value: "redis:6379"
+            - name: OPENAI_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: openai_key

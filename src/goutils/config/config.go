@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/benosborntech/recgen/utils/logger"
+	"github.com/benosborntech/recgen/goutils/logger"
 )
 
 type Config struct {

@@ -5,10 +5,10 @@ import (
 	"io"
 	"os"
 
+	"github.com/benosborntech/recgen/goutils/config"
+	"github.com/benosborntech/recgen/goutils/constants"
+	"github.com/benosborntech/recgen/goutils/model"
 	"github.com/benosborntech/recgen/updaterecommendations/handler"
-	"github.com/benosborntech/recgen/utils/config"
-	"github.com/benosborntech/recgen/utils/constants"
-	"github.com/benosborntech/recgen/utils/model"
 	"github.com/bsm/redislock"
 	"github.com/redis/go-redis/v9"
 	"github.com/segmentio/kafka-go"

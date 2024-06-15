@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/benosborntech/recgen/getrecommendations/handler"
-	"github.com/benosborntech/recgen/utils/config"
+	"github.com/benosborntech/recgen/goutils/config"
 	"github.com/gofiber/fiber"
 	"github.com/redis/go-redis/v9"
 )

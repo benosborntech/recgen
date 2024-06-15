@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/benosborntech/recgen/utils/config"
-	"github.com/benosborntech/recgen/utils/model"
+	"github.com/benosborntech/recgen/goutils/config"
+	"github.com/benosborntech/recgen/goutils/model"
 	"github.com/gofiber/fiber"
 	"github.com/segmentio/kafka-go"
 )

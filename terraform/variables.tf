@@ -1,10 +1,16 @@
 # Misc
 variable "digitalocean_token" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "digitalocean_user" {
   type = string
+}
+
+variable "openai_key" {
+  type      = string
+  sensitive = true
 }
 
 variable "digitalocean_project" {

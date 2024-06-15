@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/benosborntech/recgen/utils/config"
-	"github.com/benosborntech/recgen/utils/constants"
-	"github.com/benosborntech/recgen/utils/misc"
-	"github.com/benosborntech/recgen/utils/model"
+	"github.com/benosborntech/recgen/goutils/config"
+	"github.com/benosborntech/recgen/goutils/constants"
+	"github.com/benosborntech/recgen/goutils/misc"
+	"github.com/benosborntech/recgen/goutils/model"
 	"github.com/bsm/redislock"
 	"github.com/redis/go-redis/v9"
 )

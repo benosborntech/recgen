@@ -1,15 +1,9 @@
 import openai
-import os
 import json
+from ..pyutils.model import Data
 
-client = openai.OpenAI(
-    api_key=os.environ["OPENAI_KEY"]
-)
-
-FILE = "data.json"
-
-def main():
-    with open(FILE, "r+") as f:
+def generate_data(file: str, client: openai.OpenAI) -> Data:
+    with open(file, "r+") as f:
         data = json.load(f)
 
         for key, value in data.items():
@@ -23,4 +17,4 @@ def main():
         f.seek(0)
         json.dump(data, f)
 
-main()
+    return data
