@@ -4,18 +4,18 @@ import sys
 
 class Logger:
     def __init__(self) -> None:
-        logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
 
-        self.info = logging.getLogger('info')
-        self.error = logging.getLogger('error')
-        self.fatal = logging.getLogger('fatal')
+        self._info = logging.getLogger("info")
+        self._error = logging.getLogger("error")
+        self._fatal = logging.getLogger("fatal")
 
     def info(self, msg: str) -> None:
-        self.info(msg)
+        self._info.info(msg)
 
     def error(self, msg: str) -> None:
-        self.error(msg)
+        self._error.error(msg)
 
     def fatal(self, msg: str) -> None:
-        self.fatal(msg)
+        self._fatal.fatal(msg)
         sys.exit(1)
