@@ -1,10 +1,10 @@
 import redis
 from redis.commands.search.query import Query
 
-from ..pyutils.config import Config
-from ..pyutils.keyconcat import key_concat
-from ..pyutils.constants import BF_PREFIX, DB_HASH_PREFIX, LOCK_TIMEOUT, LOCK_PREFIX, MAX_RECOMMENDATIONS, SET_PREFIX, VECTOR_INDEX, MAX_RESULTS
-from ..pyutils.model import Body
+from src.pyutils.config import Config
+from src.pyutils.keyconcat import key_concat
+from src.pyutils.constants import BF_PREFIX, DB_HASH_PREFIX, LOCK_TIMEOUT, LOCK_PREFIX, MAX_RECOMMENDATIONS, SET_PREFIX, VECTOR_INDEX, MAX_RESULTS
+from src.pyutils.model import Body
 
 
 def handle(cfg: Config, r_client: redis.Redis, body: Body) -> None:

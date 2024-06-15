@@ -9,10 +9,10 @@ from redis.commands.search.field import (
     VectorField
 )
 
-from ..pyutils.model import Data
-from ..pyutils.keyconcat import key_concat
-from ..pyutils.constants import VECTOR_INDEX, DB_HASH_PREFIX
-from ..pyutils.config import Config
+from src.pyutils.model import Data
+from src.pyutils.keyconcat import key_concat
+from src.pyutils.constants import VECTOR_INDEX, DB_HASH_PREFIX
+from src.pyutils.config import Config
 
 
 def load_data(cfg: Config, r_client: redis.Redis, data: Data) -> None:

@@ -4,11 +4,11 @@ import redis
 import kafka
 import json
 
-from ..pyutils.config import Config
-from ..pyutils.constants import EVENT_TOPIC
-from .generatedata import generate_data
-from .loaddata import load_data
-from .handler import handle
+from src.pyutils.config import Config
+from src.pyutils.constants import EVENT_TOPIC
+from src.updaterecommendations.generatedata import generate_data
+from src.updaterecommendations.loaddata import load_data
+from src.updaterecommendations.handler import handle
 
 
 FILE = "data.json"

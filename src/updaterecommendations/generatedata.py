@@ -1,8 +1,8 @@
 import openai
 import json
 
-from ..pyutils.model import Data
-from ..pyutils.config import Config
+from src.pyutils.model import Data
+from src.pyutils.config import Config
 
 
 def generate_data(cfg: Config, file: str, oai_client: openai.OpenAI) -> Data:
