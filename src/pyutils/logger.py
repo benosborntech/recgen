@@ -1,6 +1,7 @@
 import logging
 import sys
 
+
 class Logger:
     def __init__(self) -> None:
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')

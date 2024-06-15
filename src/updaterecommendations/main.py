@@ -1,23 +1,40 @@
 import os
 import openai
 import redis
-from ..pyutils.config import Config
+import kafka
+import json
 
-openai_client = openai.OpenAI(
-    api_key=os.environ["OPENAI_KEY"]
-)
+from ..pyutils.config import Config
+from ..pyutils.constants import EVENT_TOPIC
+from .generatedata import generate_data
+from .loaddata import load_data
+from .handler import handle
+
 
 FILE = "data.json"
 REDIS_ADDR = os.environ["REDIS_ADDR"]
 KAFKA_BROKER = os.environ["KAFKA_BROKER"]
+OPENAI_KEY = os.environ["OPENAI_KEY"]
 
 def main() -> None:
     cfg = Config()
 
-    rdb = redis.Redis(
-        host=REDIS_ADDR
-    )
+    oai_client = openai.OpenAI(api_key=OPENAI_KEY)
+    r_client = redis.Redis(host=REDIS_ADDR)
+    k_consumer = kafka.KafkaConsumer(EVENT_TOPIC, bootstrap_servers=[KAFKA_BROKER])
 
-    pass
+    cfg.get_logger().info("initialized clients")
+
+    data = generate_data(cfg, FILE, oai_client)
+    load_data(cfg, r_client, data)
+
+    cfg.get_logger().info("loaded data")
+
+    for msg in k_consumer:
+        body = json.loads(msg.value)
+
+        cfg.get_logger().info(f"message body: '{body}'")
+
+        handle(cfg, r_client, body)
 
 main()

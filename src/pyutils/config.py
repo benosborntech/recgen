@@ -1,5 +1,6 @@
 import logger
 
+
 class Config:
     def __init__(self) -> None:
         self.logger = logger.Logger()
