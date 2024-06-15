@@ -11,11 +11,11 @@ class Logger:
         self.fatal = logging.getLogger('fatal')
 
     def info(self, msg: str) -> None:
-        self.info.info(msg)
+        self.info(msg)
 
     def error(self, msg: str) -> None:
-        self.error.error(msg)
+        self.error(msg)
 
     def fatal(self, msg: str) -> None:
-        self.fatal.fatal(msg)
+        self.fatal(msg)
         sys.exit(1)
