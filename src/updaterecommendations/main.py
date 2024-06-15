@@ -11,7 +11,7 @@ from src.updaterecommendations.loaddata import load_data
 from src.updaterecommendations.handler import handle
 
 
-FILE = "data.json"
+DATA_FILE = os.environ["DATA_FILE"]
 REDIS_ADDR = os.environ["REDIS_ADDR"]
 KAFKA_BROKER = os.environ["KAFKA_BROKER"]
 OPENAI_KEY = os.environ["OPENAI_KEY"]
@@ -25,7 +25,7 @@ def main() -> None:
 
     cfg.get_logger().info("initialized clients")
 
-    data = generate_data(cfg, FILE, oai_client)
+    data = generate_data(cfg, DATA_FILE, oai_client)
     load_data(cfg, r_client, data)
 
     cfg.get_logger().info("loaded data")

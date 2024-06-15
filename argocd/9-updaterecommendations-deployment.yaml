@@ -23,6 +23,8 @@ spec:
               value: "kafka:9092"
             - name: REDIS_ADDR
               value: "redis:6379"
+            - name: DATA_FILE
+              value: "src/data.json"
             - name: OPENAI_KEY
               valueFrom:
                 secretKeyRef:
