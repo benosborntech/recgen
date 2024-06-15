@@ -12,7 +12,7 @@ from src.updaterecommendations.handler import handle
 
 
 DATA_FILE = os.environ["DATA_FILE"]
-REDIS_ADDR = os.environ["REDIS_ADDR"]
+REDIS_HOST = os.environ["REDIS_HOST"]
 KAFKA_BROKER = os.environ["KAFKA_BROKER"]
 OPENAI_KEY = os.environ["OPENAI_KEY"]
 
@@ -20,7 +20,7 @@ def main() -> None:
     cfg = Config()
 
     oai_client = openai.OpenAI(api_key=OPENAI_KEY)
-    r_client = redis.Redis(host=REDIS_ADDR)
+    r_client = redis.Redis(host=REDIS_HOST)
     k_consumer = kafka.KafkaConsumer(EVENT_TOPIC, bootstrap_servers=[KAFKA_BROKER])
 
     cfg.get_logger().info("initialized clients")

@@ -21,8 +21,8 @@ spec:
           env:
             - name: KAFKA_BROKER
               value: "kafka:9092"
-            - name: REDIS_ADDR
-              value: "redis:6379"
+            - name: REDIS_HOST
+              value: "redis"
             - name: DATA_FILE
               value: "src/data.json"
             - name: OPENAI_KEY
