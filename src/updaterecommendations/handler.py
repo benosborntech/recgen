@@ -30,10 +30,9 @@ def handle(cfg: Config, r_client: redis.Redis, body: Body) -> None:
         params_dict = {"vector": vec}
 
         results = r_client.ft(VECTOR_INDEX).search(query, params_dict)
+        
         for i, article in enumerate(results.docs):
-            score = 1 - float(article.vector_score)
-
-            cfg.get_logger().info(f"{i}. {article} (Score: {round(score, 3) })")
+            cfg.get_logger().info(f"{i}. {article}")
     else:
         r_client.bf().add(key_concat(BF_PREFIX, body["userId"]))
         r_client.zrem(key_concat(SET_PREFIX, body["userId"]), body["itemId"])
