@@ -22,7 +22,7 @@ def handle(cfg: Config, r_client: redis.Redis, body: Body) -> None:
 
         query = (
             Query(base_query)
-            .return_fields("id", "vector")
+            .return_fields("id", "vector", "vector_score")
             .sort_by("vector_score")
             .paging(cursor, cursor + MAX_RESULTS)
             .dialect(2)
