@@ -49,6 +49,6 @@ def load_data(cfg: Config, r_client: redis.Redis, data: Data) -> None:
             "id": value["id"],
             "title": value["title"],
             "description": value["description"],
-            "vector": bytes(value["vector"])
+            "vector": value["vector"].tobytes()
         })
         cfg.get_logger().info(f"added document with key '{doc_key}'")

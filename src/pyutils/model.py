@@ -1,11 +1,12 @@
 from typing import TypedDict, Dict, List
+import numpy as np
 
 
 class DataObject(TypedDict):
     id: str
     title: str
     description: str
-    vector: List[float]
+    vector: np.array
 
 Data = Dict[str, DataObject]
 

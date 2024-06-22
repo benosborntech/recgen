@@ -1,5 +1,6 @@
 import openai
 import json
+import numpy as np
 
 from src.pyutils.model import Data
 from src.pyutils.config import Config
@@ -18,7 +19,7 @@ def generate_data(cfg: Config, file: str, oai_client: openai.OpenAI) -> Data:
             response = oai_client.embeddings.create(input=description, model="text-embedding-ada-002")
             embeddings = response.data[0].embedding
 
-            data[key]["vector"] = embeddings
+            data[key]["vector"] = np.array(embeddings, dtype=np.float32)
 
             cfg.get_logger().info(f"generating embeddings for '{key}'")
 
