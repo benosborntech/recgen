@@ -40,8 +40,15 @@ def load_data(cfg: Config, r_client: redis.Redis, data: Data) -> None:
             definition=IndexDefinition(prefix=[DB_HASH_PREFIX], index_type=IndexType.HASH)
         )
 
+        cfg.get_logger().info(f"created index '{VECTOR_INDEX}'")
+
     for key, value in data.items():
         doc_key = key_concat(DB_HASH_PREFIX, key)
 
-        r_client.hset(doc_key, mapping=value)
+        r_client.hset(doc_key, mapping={
+            "id": value["id"],
+            "title": value["title"],
+            "description": value["description"],
+            "vector": bytes(value["vector"])
+        })
         cfg.get_logger().info(f"added document with key '{doc_key}'")
