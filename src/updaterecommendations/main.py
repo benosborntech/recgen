@@ -21,7 +21,7 @@ def main() -> None:
 
     oai_client = openai.OpenAI(api_key=OPENAI_KEY)
     r_client = redis.Redis(host=REDIS_HOST)
-    k_consumer = kafka.KafkaConsumer(EVENT_TOPIC, bootstrap_servers=[KAFKA_BROKER])
+    k_consumer = kafka.KafkaConsumer(EVENT_TOPIC, bootstrap_servers=[KAFKA_BROKER], auto_offset_reset="earliest", enable_auto_commit=True)
 
     cfg.get_logger().info("initialized clients")
 
@@ -37,4 +37,5 @@ def main() -> None:
 
         handle(cfg, r_client, body)
 
-main()
+if __name__ == "__main__":
+    main()
