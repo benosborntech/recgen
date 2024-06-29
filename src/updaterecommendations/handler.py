@@ -3,7 +3,7 @@ from redis.commands.search.query import Query
 
 from src.pyutils.config import Config
 from src.pyutils.keyconcat import key_concat
-from src.pyutils.constants import BF_PREFIX, DB_HASH_PREFIX, LOCK_TIMEOUT, LOCK_PREFIX, MAX_RECOMMENDATIONS, SET_PREFIX, VECTOR_INDEX, MAX_RESULTS, PAGE_SIZE
+from src.pyutils.constants import BF_PREFIX, DB_HASH_PREFIX, LOCK_TIMEOUT, LOCK_PREFIX, MAX_RECOMMENDATIONS, SET_PREFIX, VECTOR_INDEX, MAX_RESULTS
 from src.pyutils.model import Body
 
 
@@ -57,7 +57,7 @@ def handle(cfg: Config, r_client: redis.Redis, body: Body) -> None:
             cfg.get_logger().info(f"count for {k_count} is {count}")
 
             condition = count < MAX_RECOMMENDATIONS and len(results.docs) == count
-            cursor += PAGE_SIZE
+            cursor += MAX_RESULTS
 
         to_remove = count - MAX_RECOMMENDATIONS
         if to_remove > 0:
