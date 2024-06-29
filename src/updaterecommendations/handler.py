@@ -7,12 +7,16 @@ from src.pyutils.constants import BF_PREFIX, DB_HASH_PREFIX, LOCK_TIMEOUT, LOCK_
 from src.pyutils.model import Body
 
 
-def handle(_: Config, r_client: redis.Redis, body: Body) -> None:
-    lock = r_client.lock(key_concat(LOCK_PREFIX, body["userId"]), LOCK_TIMEOUT)
+def handle(cfg: Config, r_client: redis.Redis, body: Body) -> None:
+    k_lock = key_concat(LOCK_PREFIX, body["userId"])
+    lock = r_client.lock(k_lock, LOCK_TIMEOUT)
     lock.acquire(blocking=True)
 
+    cfg.get_logger(f"acquired lock {k_lock}")
+
     if body["positive"]:
-        vec = r_client.hget(key_concat(DB_HASH_PREFIX, body["itemId"]), "vector")
+        k_vec = key_concat(DB_HASH_PREFIX, body["itemId"])
+        vec = r_client.hget(k_vec, "vector")
 
         base_query = f"*=>[KNN {MAX_RESULTS} @vector $vector AS vector_score]"
 
@@ -33,23 +37,44 @@ def handle(_: Config, r_client: redis.Redis, body: Body) -> None:
             results = r_client.ft(VECTOR_INDEX).search(query, params_dict)
             
             for article in results.docs:
-                exists = r_client.bf().exists(key_concat(BF_PREFIX, body["userId"]), body["itemId"])
+                cfg.get_logger(f"found result for key {k_vec}: {article}")
+
+                k_bf = key_concat(BF_PREFIX, body["userId"])
+                exists = r_client.bf().exists(k_bf, body["itemId"])
                 if exists:
+                    cfg.get_logger(f"skipping result as exists within filter {k_bf}")
+
                     continue
 
-                r_client.zadd(key_concat(SET_PREFIX, body["userId"]), {body["itemId"]: article.vector_score})
+                k_set = key_concat(SET_PREFIX, body["userId"])
+                r_client.zadd(k_set, {body["itemId"]: article.vector_score})
 
-            count = r_client.zcount(key_concat(SET_PREFIX, body["userId"]), 0, 1)
+                cfg.get_logger(f"adding result {body["itemId"]} to set {k_set}")
+
+            k_count = key_concat(SET_PREFIX, body["userId"])
+            count = r_client.zcount(k_count, 0, 1)
+
+            cfg.get_logger(f"count for {k_count} is {count}")
 
             condition = count < MAX_RECOMMENDATIONS and len(results.docs) == count
             cursor += PAGE_SIZE
 
         to_remove = count - MAX_RECOMMENDATIONS
         if to_remove > 0:
-            r_client.zpopmin(key_concat(SET_PREFIX, body["userId"]), to_remove)
+            k_remove = key_concat(SET_PREFIX, body["userId"])
+            r_client.zpopmin(k_remove, to_remove)
+
+            cfg.get_logger(f"removed for {k_remove} is {to_remove}")
 
     else:
-        r_client.bf().add(key_concat(BF_PREFIX, body["userId"]))
-        r_client.zrem(key_concat(SET_PREFIX, body["userId"]), body["itemId"])
+        k_bf = key_concat(BF_PREFIX, body["userId"])
+        r_client.bf().add(k_bf)
+
+        cfg.get_logger(f"added key {k_bf} to filter")
+
+        k_set = key_concat(SET_PREFIX, body["userId"])
+        r_client.zrem(k_set, body["itemId"])
+
+        cfg.get_logger(f"added item {body["itemId"]} to {k_set}")
 
     lock.release()
