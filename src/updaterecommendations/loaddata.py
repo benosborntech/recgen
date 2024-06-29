@@ -20,7 +20,7 @@ def load_data(cfg: Config, r_client: redis.Redis, data: Data) -> None:
     vec_len = len(values)
     vec_dim = len(list(values)[0]["vector"])
 
-    id = TextField(name = "id") 
+    iid = TextField(name = "iid") 
     title = TextField(name = "title") 
     description = TextField(name = "description")
     vector = VectorField("vector", "FLAT", {
@@ -46,7 +46,7 @@ def load_data(cfg: Config, r_client: redis.Redis, data: Data) -> None:
         doc_key = key_concat(DB_HASH_PREFIX, key)
 
         r_client.hset(doc_key, mapping={
-            "id": value["id"],
+            "iid": value["iid"],
             "title": value["title"],
             "description": value["description"],
             "vector": value["vector"].tobytes()

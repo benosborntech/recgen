@@ -27,7 +27,7 @@ def handle(cfg: Config, r_client: redis.Redis, body: Body) -> None:
         while condition:
             query = (
                 Query(base_query)
-                .return_fields("id", "vector", "vector_score")
+                .return_fields("iid", "vector", "vector_score")
                 .sort_by("vector_score")
                 .paging(cursor, cursor + MAX_RESULTS)
                 .dialect(2)
@@ -47,7 +47,7 @@ def handle(cfg: Config, r_client: redis.Redis, body: Body) -> None:
                     continue
 
                 k_set = key_concat(SET_PREFIX, body["userId"])
-                r_client.zadd(k_set, {body["itemId"]: article.vector_score})
+                r_client.zadd(k_set, {article.iid: article.vector_score})
 
                 cfg.get_logger().info(f"adding result {body['itemId']} to set {k_set}")
 
