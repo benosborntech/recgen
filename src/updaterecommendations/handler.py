@@ -62,7 +62,7 @@ def handle(cfg: Config, r_client: redis.Redis, body: Body) -> None:
         to_remove = count - MAX_RECOMMENDATIONS
         if to_remove > 0:
             k_remove = key_concat(SET_PREFIX, body["userId"])
-            r_client.zpopmin(k_remove, to_remove)
+            # r_client.zpopmin(k_remove, to_remove)
 
             cfg.get_logger().info(f"removed for {k_remove} is {to_remove}")
 
