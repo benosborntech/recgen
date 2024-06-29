@@ -52,7 +52,7 @@ def handle(cfg: Config, r_client: redis.Redis, body: Body) -> None:
                 cfg.get_logger().info(f"adding result {body['itemId']} to set {k_set}")
 
             k_count = key_concat(SET_PREFIX, body["userId"])
-            count = r_client.zcount(k_count, 0, 1)
+            count = r_client.zcount(k_count, -1, 1)
 
             cfg.get_logger().info(f"count for {k_count} is {count}")
 
@@ -62,7 +62,7 @@ def handle(cfg: Config, r_client: redis.Redis, body: Body) -> None:
         to_remove = count - MAX_RECOMMENDATIONS
         if to_remove > 0:
             k_remove = key_concat(SET_PREFIX, body["userId"])
-            # r_client.zpopmin(k_remove, to_remove)
+            r_client.zpopmin(k_remove, to_remove)
 
             cfg.get_logger().info(f"removed for {k_remove} is {to_remove}")
 
