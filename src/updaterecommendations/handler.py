@@ -49,7 +49,7 @@ def handle(cfg: Config, r_client: redis.Redis, body: Body) -> None:
                 k_set = key_concat(SET_PREFIX, body["userId"])
                 r_client.zadd(k_set, {body["itemId"]: article.vector_score})
 
-                cfg.get_logger(f"adding result {body["itemId"]} to set {k_set}")
+                cfg.get_logger(f"adding result {body['itemId']} to set {k_set}")
 
             k_count = key_concat(SET_PREFIX, body["userId"])
             count = r_client.zcount(k_count, 0, 1)
