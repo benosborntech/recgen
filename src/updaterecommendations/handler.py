@@ -41,7 +41,7 @@ def handle(_: Config, r_client: redis.Redis, body: Body) -> None:
 
             count = r_client.zcount(key_concat(SET_PREFIX, body["userId"]), 0, 1)
 
-            condition = count < MAX_RECOMMENDATIONS and len(results) == count
+            condition = count < MAX_RECOMMENDATIONS and len(results.docs) == count
             cursor += PAGE_SIZE
 
         to_remove = count - MAX_RECOMMENDATIONS
