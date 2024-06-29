@@ -75,6 +75,6 @@ def handle(cfg: Config, r_client: redis.Redis, body: Body) -> None:
         k_set = key_concat(SET_PREFIX, body["userId"])
         r_client.zrem(k_set, body["itemId"])
 
-        cfg.get_logger(f"added item {body["itemId"]} to {k_set}")
+        cfg.get_logger(f"added item {body['itemId']} to {k_set}")
 
     lock.release()
