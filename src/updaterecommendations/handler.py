@@ -37,7 +37,8 @@ def handle(_: Config, r_client: redis.Redis, body: Body) -> None:
                 if exists:
                     continue
 
-                r_client.zadd(key_concat(SET_PREFIX, body["userId"]), {"score": article.vector_score, "member": body["itemId"]})
+                score = key_concat(article.vector_score, body["itemId"])
+                r_client.zadd(key_concat(SET_PREFIX, body["userId"]), {"member": score})
 
             count = r_client.zcount(key_concat(SET_PREFIX, body["userId"]), 0, 1)
 
