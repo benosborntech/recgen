@@ -1,14 +1,14 @@
-import json
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+from torch.utils.data import Dataset
+from src.pyutils.model import Body, Data
 
 
 class RecommendationModel(nn.Module):
     def __init__(self, embedding_dim: int):
         super(RecommendationModel, self).__init__()
         self.embedding_dim = embedding_dim
-        self.user_embeddings = {}
+        self.user_embeddings = nn.ParameterDict()
         self.fc = nn.Linear(self.embedding_dim * 2, 1)
 
     def forward(self, user_id: str, item_emb: torch.Tensor) -> torch.Tensor:
@@ -28,25 +28,20 @@ class RecommendationModel(nn.Module):
 
         self.user_embeddings[user_id] = nn.Parameter(torch.randn(self.embedding_dim))
 
-    def save(self) -> str:
-        user_embeddings = {}
-        for key in self.user_embeddings.keys():
-            user_embeddings[key] = self.user_embeddings[key].tolist()
-
-        state = {
-            "model_dict": self.state_dict(),
-            "user_dict": user_embeddings
-        }
-
-        return json.dumps(state)
-
-    def load(self, state: str):
-        obj = json.loads(state)
-
-        self.load_state_dict(obj["model_dict"])
+class RecommendationDataset(Dataset):
+    def __init__(self, data: list[Body], embedding_dim: int, item_data: Data):
+        self.data = data
+        self.embedding_dim = embedding_dim
+        self.item_data = item_data
         
-        user_embeddings = {}
-        for key in obj["user_dict"].keys():
-            user_embeddings[key] = torch.Tensor(obj["user_dict"])
+    def __len__(self):
+        return len(self.data)
+    
+    def __getitem__(self, idx):
+        item = self.data[idx]
 
-        self.user_embeddings = user_embeddings
+        user_id = item["userId"]
+        item_emb = torch.tensor(self.item_data[item["itemId"]]["vector"])
+        label = torch.tensor([1.0]) if item["positive"] else torch.tensor([0.0])
+
+        return user_id, item_emb, label

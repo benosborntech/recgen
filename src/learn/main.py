@@ -7,10 +7,12 @@ import threading
 import boto3
 
 from src.pyutils.config import Config
+from src.learn.loaddata import load_data
 from src.pyutils.constants import EVENT_TOPIC
 from src.learn.handler import handle
 
 
+DATA_FILE = os.environ["DATA_FILE"]
 REDIS_HOST = os.environ["REDIS_HOST"]
 KAFKA_BROKER = os.environ["KAFKA_BROKER"]
 SPACES_ENDPOINT = os.environ["SPACES_ENDPOINT"]
@@ -28,13 +30,19 @@ def main() -> None:
     session = boto3.session.Session()
     client = session.client("s3", region_name=SPACES_REGION, endpoint_url=SPACES_ENDPOINT, aws_access_key_id=SPACES_ACCESS_KEY, aws_secret_access_key=SPACES_SECRET_KEY)
 
-    cfg.get_logger().info("initialized clients")
-
     q = queue.Queue()
 
-    thread = threading.Thread(target=handle, args=(cfg, r_client, q, client, SPACE_NAME))
+    cfg.get_logger().info("initialized clients")
+
+    data = load_data(cfg, DATA_FILE)
+
+    cfg.get_logger().info("loaded data")
+
+    thread = threading.Thread(target=handle, args=(cfg, r_client, q, client, SPACE_NAME, data))
     thread.daemon = True
     thread.start()
+
+    cfg.get_logger().info("started daemon")
 
     for msg in k_consumer:
         body = json.loads(msg.value)

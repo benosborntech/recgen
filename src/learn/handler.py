@@ -1,18 +1,21 @@
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import DataLoader
 import redis
 import queue
 import time
 import os
 
 from src.pyutils.config import Config
-from src.pyutils.constants import TRAIN_TIMEOUT, TRAIN_BATCH_SIZE, LOCK_PREFIX, LOCK_TIMEOUT, LOCK_UNIQUE_ID, LOCK_ID_LEARN, MODEL_FILE_NAME, MODEL_EMBEDDING_SIZE
+from src.pyutils.constants import TRAIN_TIMEOUT, TRAIN_BATCH_SIZE, LOCK_PREFIX, LOCK_TIMEOUT, LOCK_UNIQUE_ID, LOCK_ID_LEARN, MODEL_FILE_NAME, MODEL_EMBEDDING_SIZE, MODEL_LEARNING_RATE, MODEL_EPOCHS
 from src.pyutils.keyconcat import key_concat
-from src.pyutils.model import Body
-from src.pyutils.nn import RecommendationModel
+from src.pyutils.model import Body, Data
+from src.pyutils.nn import RecommendationModel, RecommendationDataset
 
 
 LOCAL_FILE = os.path.join("/tmp", MODEL_FILE_NAME)
 
-def handle(cfg: Config, r_client: redis.Redis, queue: queue.Queue, client: any, space_name: str) -> None:
+def handle(cfg: Config, r_client: redis.Redis, queue: queue.Queue, client: any, space_name: str, data: Data) -> None:
     while True:
         time.sleep(TRAIN_TIMEOUT)
 
@@ -37,11 +40,9 @@ def handle(cfg: Config, r_client: redis.Redis, queue: queue.Queue, client: any, 
 
             with open(LOCAL_FILE, "r") as f:
                 data = f.read()
-                model.load(data)
+                model.load_state_dict(data)
 
             cfg.get_logger().info("loaded current model")
-
-            # **** We may also need to load the embeddings from the data file for this to make it easier...
 
             # Add user embeddings if they do not yet exist
             for item in batch:
@@ -54,13 +55,27 @@ def handle(cfg: Config, r_client: redis.Redis, queue: queue.Queue, client: any, 
 
             cfg.get_logger().info("added new user embeddings")
 
-            # Convert the data to the right format and create the batch
-
             # Train the model
+            criterion = nn.BCELoss()
+            optimizer = optim.Adam(model.parameters(), lr=MODEL_LEARNING_RATE)
+
+            dataset = RecommendationDataset(batch, MODEL_EMBEDDING_SIZE)
+            dataloader = DataLoader(dataset, batch_size=2, shuffle=True)
+
+            for epoch in range(MODEL_EPOCHS):
+                cfg.get_logger().info(f"beginning epoch {epoch}")
+
+                for user_id, item_emb, label in dataloader:
+                    output = model(user_id[0], item_emb)
+                    loss = criterion(output, label)
+
+                    optimizer.zero_grad()
+                    loss.backward()
+                    optimizer.step()
 
             # Serialize and save the model
             with open(LOCAL_FILE, "w") as f:
-                data = model.save()
+                data = model.state_dict ()
                 f.write(data)
                 
             client.upload_file(LOCAL_FILE, space_name, MODEL_FILE_NAME)
