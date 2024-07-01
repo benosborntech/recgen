@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: learn
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: learn
+  template:
+    metadata:
+      labels:
+        service: learn
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: learn
+          image: registry.digitalocean.com/recgencr/learn:latest
+          imagePullPolicy: Always
+          env:
+            - name: KAFKA_BROKER
+              value: "kafka:9092"
+            - name: REDIS_HOST
+              value: "redis"

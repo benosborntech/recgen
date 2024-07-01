@@ -23,6 +23,21 @@ variable "region" {
   default = "syd1"
 }
 
+variable "spaces_access_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "spaces_secret_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "spaces_endpoint" {
+  type    = string
+  default = "syd1.digitaloceanspaces.com"
+}
+
 # Cluster
 variable "cluster_name" {
   type    = string
@@ -48,4 +63,10 @@ variable "cluster_node_size" {
 variable "container_registry_name" {
   type    = string
   default = "recgencr"
+}
+
+# Bucket
+variable "bucket_name" {
+  type    = string
+  default = "recgenmodelbucket1412"
 }
