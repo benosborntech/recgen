@@ -8,7 +8,7 @@ from src.pyutils.keyconcat import key_concat
 from src.pyutils.model import Body
 
 
-def handle(cfg: Config, r_client: redis.Redis, queue: queue.Queue) -> None:
+def handle(cfg: Config, r_client: redis.Redis, queue: queue.Queue, client: any) -> None:
     while True:
         time.sleep(TRAIN_TIMEOUT)
 
@@ -29,6 +29,9 @@ def handle(cfg: Config, r_client: redis.Redis, queue: queue.Queue) -> None:
 
             # **** Here we need to actually train the model - for this we are going to need to do some data processing to transform the inputs into what we need them to be
             # **** Now I need a daemon thread here which will acquire the lock, train the model from a given amount of selections every few seconds, and then save the files to S3
+
+            # **** We will need to save our weights to some file
+            # **** Then we will have to upload the model with the same name - we can just override we don't really care that much about checkpoints and it doesnt matter what the previous one reads, we can just switch it out in RAM every few minutes...
 
         lock.release()
 

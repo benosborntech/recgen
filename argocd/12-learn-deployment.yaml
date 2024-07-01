@@ -33,3 +33,13 @@ spec:
                 secretKeyRef:
                   name: secrets
                   key: spaces_secret_key
+            - name: SPACES_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: spaces_endpoint
+            - name: SPACES_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: spaces_region
