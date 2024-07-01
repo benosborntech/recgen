@@ -12,6 +12,8 @@ resource "kubernetes_secret" "secrets" {
 
   data = {
     "openai_key" : var.openai_key
+    "spaces_access_key" : var.spaces_access_key
+    "spaces_secret_key" : var.spaces_secret_key
   }
 
   type = "Opaque"
