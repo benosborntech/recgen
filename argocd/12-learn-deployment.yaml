@@ -43,3 +43,8 @@ spec:
                 secretKeyRef:
                   name: secrets
                   key: spaces_region
+            - name: SPACE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: space_name

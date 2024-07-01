@@ -8,7 +8,7 @@ import boto3
 
 from src.pyutils.config import Config
 from src.pyutils.constants import EVENT_TOPIC
-from src.updaterecommendations.handler import handle
+from src.learn.handler import handle
 
 
 REDIS_HOST = os.environ["REDIS_HOST"]
@@ -17,6 +17,7 @@ SPACES_ENDPOINT = os.environ["SPACES_ENDPOINT"]
 SPACES_REGION = os.environ["SPACES_REGION"]
 SPACES_ACCESS_KEY = os.environ["SPACES_ACCESS_KEY"]
 SPACES_SECRET_KEY = os.environ["SPACES_SECRET_KEY"]
+SPACE_NAME = os.environ["SPACE_NAME"]
 
 def main() -> None:
     cfg = Config()
@@ -31,7 +32,7 @@ def main() -> None:
 
     q = queue.Queue()
 
-    thread = threading.Thread(target=handle, args=(cfg, r_client, q, client))
+    thread = threading.Thread(target=handle, args=(cfg, r_client, q, client, SPACE_NAME))
     thread.daemon = True
     thread.start()
 
