@@ -66,7 +66,7 @@ def handle(cfg: Config, r_client: redis.Redis, queue: queue.Queue, client: any, 
                 cfg.get_logger().info(f"beginning epoch {epoch}")
 
                 for user_id, item_emb, label in dataloader:
-                    output = model(user_id[0], item_emb)
+                    output = model(user_id, item_emb)
                     loss = criterion(output, label)
 
                     optimizer.zero_grad()

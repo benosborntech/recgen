@@ -30,3 +30,28 @@ spec:
                 secretKeyRef:
                   name: secrets
                   key: openai_key
+            - name: SPACES_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: spaces_access_key
+            - name: SPACES_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: spaces_secret_key
+            - name: SPACES_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: spaces_endpoint
+            - name: SPACES_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: spaces_region
+            - name: SPACE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: space_name

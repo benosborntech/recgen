@@ -1,13 +1,15 @@
 import redis
+import torch
 from redis.commands.search.query import Query
 
+from src.pyutils.nn import RecommendationModel
 from src.pyutils.config import Config
 from src.pyutils.keyconcat import key_concat
 from src.pyutils.constants import BF_PREFIX, DB_HASH_PREFIX, LOCK_TIMEOUT, LOCK_PREFIX, MAX_RECOMMENDATIONS, SET_PREFIX, VECTOR_INDEX, MAX_RESULTS
 from src.pyutils.model import Body
 
 
-def handle(cfg: Config, r_client: redis.Redis, body: Body) -> None:
+def handle(cfg: Config, r_client: redis.Redis, body: Body, model: RecommendationModel) -> None:
     k_lock = key_concat(LOCK_PREFIX, body["userId"])
     lock = r_client.lock(k_lock, LOCK_TIMEOUT)
     lock.acquire(blocking=True)
@@ -46,8 +48,12 @@ def handle(cfg: Config, r_client: redis.Redis, body: Body) -> None:
 
                     continue
 
+                score = article.vector_score
+                if model.user_exists(body["userId"]):
+                    score = model(body["userId"], torch.tensor(article.vector)).item()
+
                 k_set = key_concat(SET_PREFIX, body["userId"])
-                r_client.zadd(k_set, {article.iid: article.vector_score})
+                r_client.zadd(k_set, {article.iid: score})
 
                 cfg.get_logger().info(f"adding result {body['itemId']} to set {k_set}")
 
