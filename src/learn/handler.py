@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
@@ -5,7 +6,6 @@ import redis
 import queue
 import time
 import os
-import json
 
 from src.pyutils.config import Config
 from src.pyutils.constants import TRAIN_TIMEOUT, TRAIN_BATCH_SIZE, LOCK_PREFIX, LOCK_TIMEOUT, LOCK_UNIQUE_ID, LOCK_ID_LEARN, MODEL_FILE_NAME, MODEL_EMBEDDING_SIZE, MODEL_LEARNING_RATE, MODEL_EPOCHS
@@ -40,11 +40,7 @@ def handle(cfg: Config, r_client: redis.Redis, queue: queue.Queue, client: any, 
 
             try:
                 client.download_file(space_name, MODEL_FILE_NAME, LOCAL_FILE)
-
-                with open(LOCAL_FILE, "r") as f:
-                    data_raw = f.read()
-                    data = json.loads(data_raw)
-                    model.load_state_dict(data)
+                model.load_state_dict(torch.load(LOCAL_FILE))
 
                 cfg.get_logger().info("loaded current model")
             except Exception as e:
@@ -80,11 +76,7 @@ def handle(cfg: Config, r_client: redis.Redis, queue: queue.Queue, client: any, 
                     optimizer.step()
 
             # Serialize and save the model
-            with open(LOCAL_FILE, "w") as f:
-                data = model.state_dict()
-                data_raw = json.dumps(data)
-                f.write(data_raw)
-                
+            torch.save(model.state_dict(), LOCAL_FILE) 
             client.upload_file(LOCAL_FILE, space_name, MODEL_FILE_NAME)
 
             cfg.get_logger().info("saved updated model")

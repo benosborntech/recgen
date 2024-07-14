@@ -4,6 +4,7 @@ import redis
 import kafka
 import json
 import boto3
+import torch
 
 from src.pyutils.config import Config
 from src.pyutils.constants import EVENT_TOPIC, MODEL_FILE_NAME, MODEL_EMBEDDING_SIZE
@@ -50,11 +51,7 @@ def main() -> None:
 
         try:
             client.download_file(SPACE_NAME, MODEL_FILE_NAME, LOCAL_FILE)
-
-            with open(LOCAL_FILE, "r") as f:
-                data_raw = f.read()
-                data = json.loads(data_raw)
-                model.load_state_dict(data)
+            model.load_state_dict(torch.load(LOCAL_FILE))
 
             cfg.get_logger().info("loaded current model")
         except Exception as e:
