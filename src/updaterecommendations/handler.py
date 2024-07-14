@@ -50,7 +50,7 @@ def handle(cfg: Config, r_client: redis.Redis, body: Body, model: Recommendation
 
                 score = article.vector_score
                 if model.user_exists(body["userId"]):
-                    score = model(body["userId"], torch.tensor(article.vector)).item()
+                    score = model([body["userId"]], torch.tensor([article.vector])).item()
 
                 k_set = key_concat(SET_PREFIX, body["userId"])
                 r_client.zadd(k_set, {article.iid: score})
