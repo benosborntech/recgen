@@ -12,19 +12,21 @@ class RecommendationModel(nn.Module):
         self.fc = nn.Linear(self.embedding_dim * 2, 1)
 
     def forward(self, user_id: str, item_emb: torch.Tensor) -> torch.Tensor:
-        assert self.user_exists(user_id), "user does not exist"
+        if not self.user_exists(user_id):
+            raise Exception("user does not exist")
 
-        user_emb = self.user_embeddings.get(user_id)
+        user_emb = self.user_embeddings[user_id]
         combined_emb = torch.cat((user_emb, item_emb), dim=1)
         output = torch.sigmoid(self.fc(combined_emb))
 
         return output
 
     def user_exists(self, user_id: str) -> bool:
-        return self.user_embeddings.get(user_id) != None
+        return user_id in self.user_embeddings
 
     def add_user(self, user_id: str) -> None:
-        assert not self.user_exists(user_id), "user already exists"
+        if self.user_exists(user_id):
+            raise Exception("user already exists")
 
         self.user_embeddings[user_id] = nn.Parameter(torch.randn(self.embedding_dim))
 
@@ -37,7 +39,7 @@ class RecommendationDataset(Dataset):
     def __len__(self):
         return len(self.data)
     
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int):
         item = self.data[idx]
 
         user_id = item["userId"]
