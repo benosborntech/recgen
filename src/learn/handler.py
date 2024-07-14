@@ -55,7 +55,7 @@ def handle(cfg: Config, r_client: redis.Redis, queue: queue.Queue, client: any, 
                 if not model.user_exists(user_id):
                     model.add_user(user_id)
 
-                    cfg.get_logger().info(f"added embeddings for {user_id}")
+                    cfg.get_logger().info(f"added embeddings for '{user_id}'")
 
             cfg.get_logger().info("added new user embeddings")
 
