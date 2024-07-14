@@ -13,7 +13,7 @@ class RecommendationModel(nn.Module):
 
     def forward(self, user_id: str, item_emb: torch.Tensor) -> torch.Tensor:
         if not self.user_exists(user_id):
-            raise Exception("user does not exist")
+            raise Exception(f"user '{user_id}' does not exist")
 
         user_emb = self.user_embeddings[user_id]
         combined_emb = torch.cat((user_emb, item_emb), dim=1)
@@ -26,7 +26,7 @@ class RecommendationModel(nn.Module):
 
     def add_user(self, user_id: str) -> None:
         if self.user_exists(user_id):
-            raise Exception("user already exists")
+            raise Exception(f"user '{user_id}' already exists")
 
         self.user_embeddings[user_id] = nn.Parameter(torch.randn(self.embedding_dim))
 
