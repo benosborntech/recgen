@@ -35,14 +35,18 @@ def handle(cfg: Config, r_client: redis.Redis, queue: queue.Queue, client: any, 
             cfg.get_logger().info("batch size is non empty - proceeding")
 
             # Load the model from the file
-            client.download_file(space_name, MODEL_FILE_NAME, LOCAL_FILE)
             model = RecommendationModel(MODEL_EMBEDDING_SIZE)
 
-            with open(LOCAL_FILE, "r") as f:
-                data = f.read()
-                model.load_state_dict(data)
+            try:
+                client.download_file(space_name, MODEL_FILE_NAME, LOCAL_FILE)
 
-            cfg.get_logger().info("loaded current model")
+                with open(LOCAL_FILE, "r") as f:
+                    data = f.read()
+                    model.load_state_dict(data)
+
+                cfg.get_logger().info("loaded current model")
+            except Exception as e:
+                cfg.get_logger().info(f"failed to load existing model for reason - using new model: {e}")
 
             # Add user embeddings if they do not yet exist
             for item in batch:

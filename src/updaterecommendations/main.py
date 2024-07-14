@@ -46,14 +46,18 @@ def main() -> None:
 
         cfg.get_logger().info(f"message body: '{body}'")
 
-        client.download_file(SPACE_NAME, MODEL_FILE_NAME, LOCAL_FILE)
         model = RecommendationModel(MODEL_EMBEDDING_SIZE)
 
-        with open(LOCAL_FILE, "r") as f:
-            data = f.read()
-            model.load_state_dict(data)
+        try:
+            client.download_file(SPACE_NAME, MODEL_FILE_NAME, LOCAL_FILE)
 
-        cfg.get_logger().info("loaded current model")
+            with open(LOCAL_FILE, "r") as f:
+                data = f.read()
+                model.load_state_dict(data)
+
+            cfg.get_logger().info("loaded current model")
+        except Exception as e:
+            cfg.get_logger().info(f"failed to load existing model for reason - using new model: {e}")
 
         handle(cfg, r_client, body, model)
 
