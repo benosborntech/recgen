@@ -63,7 +63,7 @@ def handle(cfg: Config, r_client: redis.Redis, queue: queue.Queue, client: any, 
             criterion = nn.BCELoss()
             optimizer = optim.Adam(model.parameters(), lr=MODEL_LEARNING_RATE)
 
-            dataset = RecommendationDataset(batch, MODEL_EMBEDDING_SIZE)
+            dataset = RecommendationDataset(batch, MODEL_EMBEDDING_SIZE, data)
             dataloader = DataLoader(dataset, batch_size=2, shuffle=True)
 
             for epoch in range(MODEL_EPOCHS):
