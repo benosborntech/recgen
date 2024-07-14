@@ -15,7 +15,6 @@ resource "kubernetes_secret" "secrets" {
     "spaces_access_key" : var.spaces_access_key
     "spaces_secret_key" : var.spaces_secret_key
     "spaces_endpoint" : var.spaces_endpoint
-    "spaces_region" : var.region
     "space_name" : var.bucket_name
   }
 

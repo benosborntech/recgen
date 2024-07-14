@@ -20,7 +20,6 @@ REDIS_HOST = os.environ["REDIS_HOST"]
 KAFKA_BROKER = os.environ["KAFKA_BROKER"]
 OPENAI_KEY = os.environ["OPENAI_KEY"]
 SPACES_ENDPOINT = os.environ["SPACES_ENDPOINT"]
-SPACES_REGION = os.environ["SPACES_REGION"]
 SPACES_ACCESS_KEY = os.environ["SPACES_ACCESS_KEY"]
 SPACES_SECRET_KEY = os.environ["SPACES_SECRET_KEY"]
 SPACE_NAME = os.environ["SPACE_NAME"]
@@ -33,7 +32,7 @@ def main() -> None:
     k_consumer = kafka.KafkaConsumer(EVENT_TOPIC, bootstrap_servers=[KAFKA_BROKER], auto_offset_reset="earliest", enable_auto_commit=True)
 
     session = boto3.session.Session()
-    client = session.client("s3", region_name=SPACES_REGION, endpoint_url=SPACES_ENDPOINT, aws_access_key_id=SPACES_ACCESS_KEY, aws_secret_access_key=SPACES_SECRET_KEY)
+    client = session.client("s3", endpoint_url=SPACES_ENDPOINT, aws_access_key_id=SPACES_ACCESS_KEY, aws_secret_access_key=SPACES_SECRET_KEY)
 
     cfg.get_logger().info("initialized clients")
 

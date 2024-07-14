@@ -9,7 +9,7 @@ init:
 	cd $(TERRAFORM_DIR) && terraform init
 
 apply:
-	source $(ENV_FILE) && cd $(TERRAFORM_DIR) && terraform apply -var="digitalocean_user=$$DIGITALOCEAN_USER" -var="digitalocean_token=$$DIGITALOCEAN_TOKEN" -var="openai_key=$$OPENAI_KEY" -var="spaces_access_key=$$SPACES_ACCESS_KEY" -var="spaces_secret_key=$$SPACES_SECRET_KEY"
+	source $(ENV_FILE) && cd $(TERRAFORM_DIR) && terraform apply -var="digitalocean_user=$$DIGITALOCEAN_USER" -var="digitalocean_token=$$DIGITALOCEAN_TOKEN" -var="openai_key=$$OPENAI_KEY" -var="spaces_access_key=$$SPACES_ACCESS_KEY" -var="spaces_secret_key=$$SPACES_SECRET_KEY" -var="spaces_endpoint=$$SPACES_ENDPOINT"
 
 echo:
 	source $(ENV_FILE) && echo $$SPACES_ACCESS_KEY && echo $$SPACES_SECRET_KEY

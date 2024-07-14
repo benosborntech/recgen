@@ -34,8 +34,7 @@ variable "spaces_secret_key" {
 }
 
 variable "spaces_endpoint" {
-  type    = string
-  default = "syd1.digitaloceanspaces.com"
+  type = string
 }
 
 # Cluster
