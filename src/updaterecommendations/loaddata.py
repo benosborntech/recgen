@@ -24,7 +24,7 @@ def load_data(cfg: Config, r_client: redis.Redis, data: Data) -> None:
     title = TextField(name = "title") 
     description = TextField(name = "description")
     vector_encoded = TextField(name = "vector_encoded")
-    vector = VectorField("vector", "FLAT", {
+    vector = VectorField("vector", "HNSW", {
         "TYPE": "FLOAT32",
         "DIM": vec_dim,
         "DISTANCE_METRIC": "COSINE",
