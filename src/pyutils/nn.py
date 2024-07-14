@@ -11,15 +11,15 @@ class RecommendationModel(nn.Module):
         self.user_embeddings = nn.ParameterDict()
         self.fc = nn.Linear(self.embedding_dim * 2, 1)
 
-    def forward(self, user_ids: list[str], item_emb: torch.Tensor) -> torch.Tensor:
+    def forward(self, user_id: list[str], item_emb: torch.Tensor) -> torch.Tensor:
         user_embs = []
-        for user_id in user_ids:
-            if not self.user_exists(user_id):
-                raise Exception(f"user '{user_id}' does not exist")
+        for id in user_id:
+            if not self.user_exists(id):
+                raise Exception(f"user '{id}' does not exist")
 
-            user_embs.append(self.user_embeddings[user_id])
+            user_embs.append(self.user_embeddings[id])
 
-        combined_emb = torch.cat((torch.tensor(user_embs), item_emb), dim=1)
+        combined_emb = torch.cat((torch.stack(user_embs), item_emb), dim=1)
         output = torch.sigmoid(self.fc(combined_emb))
 
         return output
