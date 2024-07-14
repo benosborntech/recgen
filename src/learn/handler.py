@@ -26,7 +26,7 @@ def handle(cfg: Config, r_client: redis.Redis, queue: queue.Queue, client: any, 
         cfg.get_logger().info(f"acquired lock {k_lock}")
 
         batch: list[Body] = []
-        while len(queue) > 0 and len(batch) < TRAIN_BATCH_SIZE:
+        while not queue.empty() and len(batch) < TRAIN_BATCH_SIZE:
             elem = queue.get()
 
             batch.append(elem)
