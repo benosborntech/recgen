@@ -2,6 +2,7 @@ import redis
 import torch
 import numpy as np
 from redis.commands.search.query import Query
+import json
 
 from src.pyutils.nn import RecommendationModel
 from src.pyutils.config import Config
@@ -30,7 +31,7 @@ def handle(cfg: Config, r_client: redis.Redis, body: Body, model: Recommendation
         while condition:
             query = (
                 Query(base_query)
-                .return_fields("iid", "vector", "vector_score")
+                .return_fields("iid", "vector_encoded", "vector_score")
                 .sort_by("vector_score")
                 .paging(cursor, cursor + MAX_RESULTS)
                 .dialect(2)
@@ -51,11 +52,9 @@ def handle(cfg: Config, r_client: redis.Redis, body: Body, model: Recommendation
 
                 score = article.vector_score
                 if model.user_exists(body["userId"]):
-                    vector_decoded = article.vector.encode().decode("unicode-escape").encode('ISO-8859-1')[2:-1]
-
-                    vector_array = np.frombuffer(vector_decoded, dtype=np.float32)
-                    vector_array = np.expand_dims(vector_array, axis=0)
-                    item_emb = torch.from_numpy(vector_array)
+                    vector_raw = article.vector_encoded
+                    vector = json.loads(vector_raw)
+                    item_emb = torch.tensor(vector).unsqueeze(0)
 
                     score = model([body["userId"]], item_emb).item()
 
