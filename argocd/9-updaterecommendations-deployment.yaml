@@ -40,11 +40,11 @@ spec:
                 secretKeyRef:
                   name: secrets
                   key: spaces_secret_key
-            - name: SPACES_ENDPOINT
+            - name: SPACES_ENDPOINT_ORIGIN
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: spaces_endpoint
+                  key: spaces_endpoint_origin
             - name: SPACE_NAME
               valueFrom:
                 secretKeyRef:

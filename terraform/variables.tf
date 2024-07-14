@@ -34,6 +34,11 @@ variable "spaces_secret_key" {
 }
 
 variable "spaces_endpoint" {
+  type    = string
+  default = "syd1.digitaloceanspaces.com"
+}
+
+variable "spaces_endpoint_origin" {
   type = string
 }
 

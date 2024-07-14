@@ -15,7 +15,7 @@ from src.learn.handler import handle
 DATA_FILE = os.environ["DATA_FILE"]
 REDIS_HOST = os.environ["REDIS_HOST"]
 KAFKA_BROKER = os.environ["KAFKA_BROKER"]
-SPACES_ENDPOINT = os.environ["SPACES_ENDPOINT"]
+SPACES_ENDPOINT_ORIGIN = os.environ["SPACES_ENDPOINT_ORIGIN"]
 SPACES_ACCESS_KEY = os.environ["SPACES_ACCESS_KEY"]
 SPACES_SECRET_KEY = os.environ["SPACES_SECRET_KEY"]
 SPACE_NAME = os.environ["SPACE_NAME"]
@@ -27,7 +27,7 @@ def main() -> None:
     k_consumer = kafka.KafkaConsumer(EVENT_TOPIC, bootstrap_servers=[KAFKA_BROKER], auto_offset_reset="earliest", enable_auto_commit=True)
 
     session = boto3.session.Session()
-    client = session.client("s3", endpoint_url=SPACES_ENDPOINT, aws_access_key_id=SPACES_ACCESS_KEY, aws_secret_access_key=SPACES_SECRET_KEY)
+    client = session.client("s3", endpoint_url=SPACES_ENDPOINT_ORIGIN, aws_access_key_id=SPACES_ACCESS_KEY, aws_secret_access_key=SPACES_SECRET_KEY)
 
     q = queue.Queue()
 
