@@ -51,7 +51,7 @@ def handle(cfg: Config, r_client: redis.Redis, body: Body, model: Recommendation
 
                 score = article.vector_score
                 if model.user_exists(body["userId"]):
-                    vector_array = np.frombuffer(article.vector, dtype=np.float32)
+                    vector_array = np.frombuffer(article.vector.encode(), dtype=np.float32)
                     vector_array = np.expand_dims(vector_array, axis=0)
                     item_emb = torch.from_numpy(vector_array)
 
