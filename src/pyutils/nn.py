@@ -33,6 +33,15 @@ class RecommendationModel(nn.Module):
 
         self.user_embeddings[user_id] = nn.Parameter(torch.randn(self.embedding_dim))
 
+    def load_state_dict(self, state_dict, strict=True):
+        for key in state_dict.keys():
+            if key.startswith("user_embeddings."):
+                user_id = key.split(".")[1]
+                if not self.user_exists(user_id):
+                    self.user_embeddings[user_id] = nn.Parameter(torch.randn(self.embedding_dim))
+        
+        super().load_state_dict(state_dict, strict)
+
 class RecommendationDataset(Dataset):
     def __init__(self, data: list[Body], embedding_dim: int, item_data: Data):
         self.data = data
