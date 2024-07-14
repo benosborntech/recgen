@@ -35,7 +35,7 @@ def load_data(cfg: Config, r_client: redis.Redis, data: Data) -> None:
         cfg.get_logger().info(f"index '{VECTOR_INDEX}' already exists")
     except:
         r_client.ft(VECTOR_INDEX).create_index(
-            fields=[id, title, description, vector],
+            fields=[iid, title, description, vector],
             definition=IndexDefinition(prefix=[DB_HASH_PREFIX], index_type=IndexType.HASH)
         )
 

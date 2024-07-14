@@ -1,5 +1,6 @@
 import redis
 import torch
+import numpy as np
 from redis.commands.search.query import Query
 
 from src.pyutils.nn import RecommendationModel
@@ -50,10 +51,16 @@ def handle(cfg: Config, r_client: redis.Redis, body: Body, model: Recommendation
 
                 score = article.vector_score
                 if model.user_exists(body["userId"]):
-                    score = model([body["userId"]], torch.tensor([article.vector])).item()
+                    vector_array = np.frombuffer(article.vector, dtype=np.float32)
+                    vector_array = np.expand_dims(vector_array, axis=0)
+                    item_emb = torch.from_numpy(vector_array)
+
+                    score = model([body["userId"]], item_emb).item()
+
+                    cfg.get_logger().info(f"got score {score} from model")
 
                 k_set = key_concat(SET_PREFIX, body["userId"])
-                r_client.zadd(k_set, {article.iid: score})
+                r_client.zadd(k_set, {article.iid: float(score)})
 
                 cfg.get_logger().info(f"adding result {body['itemId']} to set {k_set}")
 
