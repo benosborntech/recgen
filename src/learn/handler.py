@@ -5,6 +5,7 @@ import redis
 import queue
 import time
 import os
+import json
 
 from src.pyutils.config import Config
 from src.pyutils.constants import TRAIN_TIMEOUT, TRAIN_BATCH_SIZE, LOCK_PREFIX, LOCK_TIMEOUT, LOCK_UNIQUE_ID, LOCK_ID_LEARN, MODEL_FILE_NAME, MODEL_EMBEDDING_SIZE, MODEL_LEARNING_RATE, MODEL_EPOCHS
@@ -41,7 +42,8 @@ def handle(cfg: Config, r_client: redis.Redis, queue: queue.Queue, client: any, 
                 client.download_file(space_name, MODEL_FILE_NAME, LOCAL_FILE)
 
                 with open(LOCAL_FILE, "r") as f:
-                    data = f.read()
+                    data_raw = f.read()
+                    data = json.loads(data_raw)
                     model.load_state_dict(data)
 
                 cfg.get_logger().info("loaded current model")
@@ -79,8 +81,9 @@ def handle(cfg: Config, r_client: redis.Redis, queue: queue.Queue, client: any, 
 
             # Serialize and save the model
             with open(LOCAL_FILE, "w") as f:
-                data = model.state_dict ()
-                f.write(data)
+                data = model.state_dict()
+                data_raw = json.dumps(data)
+                f.write(data_raw)
                 
             client.upload_file(LOCAL_FILE, space_name, MODEL_FILE_NAME)
 

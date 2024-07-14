@@ -52,7 +52,8 @@ def main() -> None:
             client.download_file(SPACE_NAME, MODEL_FILE_NAME, LOCAL_FILE)
 
             with open(LOCAL_FILE, "r") as f:
-                data = f.read()
+                data_raw = f.read()
+                data = json.loads(data_raw)
                 model.load_state_dict(data)
 
             cfg.get_logger().info("loaded current model")
